@@ -1,14 +1,17 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 
 // ⚠️ SEGURANÇA: SUPABASE_SERVICE_ROLE_KEY é SERVER-SIDE apenas
 // NUNCA deve ser usado no client ou exposto via NEXT_PUBLIC_*
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+// Verificar se estamos em build time
+const isBuildTime = process.env.NEXT_PHASE === 'phase-production-build'
 
-// Validar que SERVICE_ROLE_KEY existe apenas no servidor
-if (typeof window === 'undefined' && !supabaseServiceKey) {
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || (isBuildTime ? 'https://placeholder.supabase.co' : '')
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || (isBuildTime ? 'placeholder-key' : '')
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || (isBuildTime ? 'placeholder-service-key' : '')
+
+// Validar que SERVICE_ROLE_KEY existe apenas no servidor (não durante build)
+if (typeof window === 'undefined' && !isBuildTime && !supabaseServiceKey) {
   throw new Error(
     'SUPABASE_SERVICE_ROLE_KEY não está configurado no servidor. Configure no arquivo .env.local'
   )
@@ -43,11 +46,29 @@ if (!supabaseServiceKey) {
   console.error('Encontre em: Supabase Dashboard > Settings > API > service_role (secret)')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Lazy initialization para evitar erros durante build
+let _supabase: SupabaseClient | null = null
+let _supabaseAdmin: SupabaseClient | null = null
 
-// Cliente para operações server-side (com service role key)
-export const supabaseAdmin = createClient(
-  supabaseUrl,
-  supabaseServiceKey!
-)
+function getSupabaseClient(): SupabaseClient {
+  if (!_supabase) {
+    _supabase = createClient(supabaseUrl, supabaseAnonKey)
+  }
+  return _supabase
+}
+
+function getSupabaseAdminClient(): SupabaseClient {
+  if (!_supabaseAdmin) {
+    // Durante build, usar uma chave placeholder
+    const serviceKey = isBuildTime && !supabaseServiceKey 
+      ? 'placeholder-service-key' 
+      : (supabaseServiceKey || '')
+    
+    _supabaseAdmin = createClient(supabaseUrl, serviceKey)
+  }
+  return _supabaseAdmin
+}
+
+export const supabase = getSupabaseClient()
+export const supabaseAdmin = getSupabaseAdminClient()
 
