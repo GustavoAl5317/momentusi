@@ -59,7 +59,8 @@ export const isMercadoPagoProduction = isProduction
 
 // Função helper para log seguro (mostra apenas prefixo)
 export function getTokenPrefix(): string {
-  return accessToken.substring(0, 6) + '...'
+  // accessToken é garantido não ser undefined devido à validação no início do arquivo
+  return (accessToken as string).substring(0, 6) + '...'
 }
 
 export const PLAN_PRICES = {
