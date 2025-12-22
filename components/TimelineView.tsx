@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { TimelineWithMoments, Moment } from '@/types'
 import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale/pt-BR'
+import ptBR from 'date-fns/locale/pt-BR'
 import { QRCodeSVG } from 'qrcode.react'
 import MomentModal from './MomentModal'
 import TimelineVertical from './TimelineVertical'

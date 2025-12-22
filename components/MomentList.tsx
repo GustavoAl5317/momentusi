@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Moment, PlanType } from '@/types'
 import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale/pt-BR'
+import ptBR from 'date-fns/locale/pt-BR'
 
 interface MomentListProps {
   moments: Moment[]

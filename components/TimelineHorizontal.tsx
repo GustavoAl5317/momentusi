@@ -2,7 +2,7 @@
 
 import { Moment } from '@/types'
 import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale/pt-BR'
+import ptBR from 'date-fns/locale/pt-BR'
 import { useRef, useEffect, useState } from 'react'
 
 interface TimelineHorizontalProps {
