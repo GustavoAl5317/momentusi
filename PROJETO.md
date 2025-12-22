@@ -25,8 +25,8 @@ Momenta é um SaaS B2C para criar e compartilhar linhas do tempo de momentos esp
    - **Completo (R$39,90)**: Ilimitado, temas premium, privacidade, QR Code, carta final
 
 4. **Sistema de Pagamento**
-   - Integração com Stripe
-   - Checkout seguro
+   - Integração com Mercado Pago
+   - Checkout seguro (Checkout Pro)
    - Webhook para confirmação
    - Publicação automática após pagamento
 
@@ -63,7 +63,7 @@ Momenta é um SaaS B2C para criar e compartilhar linhas do tempo de momentos esp
 ### Backend
 - **Next.js API Routes**
 - **Supabase** (PostgreSQL + Storage)
-- **Stripe** para pagamentos
+- **Mercado Pago** para pagamentos
 
 ### Banco de Dados
 - `timelines`: Linhas do tempo
@@ -75,11 +75,11 @@ Momenta é um SaaS B2C para criar e compartilhar linhas do tempo de momentos esp
 ```
 ├── app/
 │   ├── api/              # API Routes
-│   │   ├── checkout/     # Checkout Stripe
+│   │   ├── checkout/     # Checkout Mercado Pago
 │   │   ├── timelines/    # CRUD de timelines
 │   │   ├── timeline/     # Buscar timeline pública
 │   │   ├── upload/       # Upload de imagens
-│   │   └── webhooks/     # Webhook Stripe
+│   │   └── webhooks/     # Webhook Mercado Pago
 │   ├── [slug]/           # Página pública da timeline
 │   ├── create/           # Criar nova timeline
 │   ├── edit/             # Editar timeline (com token)
@@ -92,7 +92,7 @@ Momenta é um SaaS B2C para criar e compartilhar linhas do tempo de momentos esp
 │   └── MomentList.tsx        # Lista de momentos
 ├── lib/
 │   ├── supabase.ts       # Cliente Supabase
-│   └── stripe.ts         # Cliente Stripe
+│   └── mercadopago.ts    # Cliente Mercado Pago
 ├── types/
 │   └── index.ts          # Tipos TypeScript
 └── supabase/
@@ -111,7 +111,7 @@ Momenta é um SaaS B2C para criar e compartilhar linhas do tempo de momentos esp
 2. **Pagamento**
    - Redirecionado para `/checkout`
    - Informa email
-   - Processa pagamento via Stripe
+   - Processa pagamento via Mercado Pago
    - Webhook confirma pagamento
 
 3. **Publicação**
@@ -132,7 +132,7 @@ Momenta é um SaaS B2C para criar e compartilhar linhas do tempo de momentos esp
 ## 🔐 Segurança
 
 - Tokens secretos para edição (sem login)
-- Validação de webhooks do Stripe
+- Validação de webhooks do Mercado Pago
 - Sanitização de inputs
 - Senhas hasheadas (SHA-256)
 - Políticas de storage no Supabase
@@ -141,13 +141,13 @@ Momenta é um SaaS B2C para criar e compartilhar linhas do tempo de momentos esp
 
 ### Pré-requisitos
 - Conta Supabase
-- Conta Stripe
+- Conta Mercado Pago
 - Domínio (opcional)
 
 ### Passos
 1. Configure variáveis de ambiente
 2. Execute schema SQL no Supabase
-3. Configure webhook no Stripe
+3. Configure webhook no Mercado Pago
 4. Deploy no Vercel/Railway/Render
 
 ## 📝 Próximas Melhorias

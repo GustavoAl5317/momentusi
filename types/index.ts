@@ -35,7 +35,7 @@ export interface Moment {
 export interface Payment {
   id: string
   timeline_id: string
-  stripe_payment_intent_id: string
+  mercado_pago_payment_id: string
   plan_type: PlanType
   amount: number
   status: 'pending' | 'succeeded' | 'failed'

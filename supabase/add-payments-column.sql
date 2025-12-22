@@ -20,7 +20,7 @@ BEGIN
     END IF;
 END $$;
 
--- Remover coluna antiga do Stripe se existir (opcional)
+-- Remover coluna antiga de pagamento se existir (migração)
 DO $$ 
 BEGIN
     IF EXISTS (

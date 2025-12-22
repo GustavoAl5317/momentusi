@@ -8,7 +8,7 @@ O erro mostra que a tabela `payments` existe, mas está faltando a coluna `merca
 Could not find the 'mercado_pago_payment_id' column of 'payments' in the schema cache
 ```
 
-Isso acontece quando a tabela foi criada antes de adicionarmos essa coluna ao schema (provavelmente ainda tem a coluna antiga do Stripe).
+Isso acontece quando a tabela foi criada antes de adicionarmos essa coluna ao schema.
 
 ## ✅ Solução
 
@@ -44,7 +44,7 @@ Tente criar um checkout novamente. O erro deve desaparecer.
 O script `add-payments-column.sql`:
 - ✅ Adiciona a coluna `mercado_pago_payment_id` se não existir
 - ✅ Cria o índice único para essa coluna
-- ✅ Remove a coluna antiga `stripe_payment_intent_id` se existir
+- ✅ Remove colunas antigas se existirem
 - ✅ Adiciona outras colunas que possam estar faltando (`plan_type`, `amount`, `status`, `timeline_id`)
 - ✅ Não causa erro se as colunas já existirem
 

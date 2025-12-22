@@ -15,9 +15,10 @@ cp .env.example .env.local
 # - Execute supabase/storage-setup.sql
 # - Crie bucket 'timeline-images' no Storage
 
-# 4. Configurar Stripe
-# - Adicione webhook: https://seu-dominio.com/api/webhooks/stripe
-# - Eventos: checkout.session.completed, checkout.session.async_payment_failed
+# 4. Configurar Mercado Pago
+# - Configure MERCADOPAGO_ACCESS_TOKEN no .env.local
+# - Adicione webhook: https://seu-dominio.com/api/webhooks/mercadopago
+# - Eventos: payment (todos os status)
 
 # 5. Executar
 npm run dev
@@ -28,7 +29,7 @@ npm run dev
 - [ ] Supabase configurado
 - [ ] Tabelas criadas (schema.sql)
 - [ ] Bucket de storage criado
-- [ ] Stripe configurado
+- [ ] Mercado Pago configurado
 - [ ] Webhook configurado
 - [ ] Variáveis de ambiente preenchidas
 - [ ] Teste local funcionando
@@ -37,11 +38,8 @@ npm run dev
 
 1. Acesse http://localhost:3000
 2. Crie uma timeline
-3. Use cartão de teste: `4242 4242 4242 4242`
-4. Verifique webhook com Stripe CLI:
-   ```bash
-   stripe listen --forward-to localhost:3000/api/webhooks/stripe
-   ```
+3. Teste o checkout com Mercado Pago (sandbox)
+4. Verifique os logs do webhook no console
 
 ## 📚 Documentação Completa
 

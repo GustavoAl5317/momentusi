@@ -8,7 +8,7 @@ SaaS B2C para criar e compartilhar linhas do tempo de momentos importantes.
 - **Backend:** Next.js API Routes
 - **Banco de Dados:** Supabase (PostgreSQL)
 - **Storage:** Supabase Storage
-- **Pagamento:** Stripe
+- **Pagamento:** Mercado Pago
 - **Deploy:** Vercel
 
 ## 📋 Funcionalidades
@@ -42,9 +42,8 @@ NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
-STRIPE_SECRET_KEY=your_stripe_secret_key
-STRIPE_WEBHOOK_SECRET=your_webhook_secret
+MERCADOPAGO_ACCESS_TOKEN=your_mercado_pago_access_token
+MERCADOPAGO_ENVIRONMENT=production
 
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
@@ -61,7 +60,7 @@ Execute os scripts SQL no Supabase para criar as tabelas necessárias.
 ## 🔐 Segurança
 
 - Tokens secretos para edição (sem login obrigatório)
-- Validação de webhooks do Stripe
+- Validação de webhooks do Mercado Pago
 - Sanitização de inputs
 - Rate limiting nas APIs
 
