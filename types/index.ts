@@ -1,0 +1,49 @@
+export type PlanType = 'essential' | 'complete'
+
+export type TimelineLayout = 'vertical' | 'horizontal'
+
+export interface Timeline {
+  id: string
+  slug: string
+  title: string
+  subtitle?: string
+  theme: string
+  layout: TimelineLayout
+  plan_type: PlanType
+  is_published: boolean
+  is_private: boolean
+  password_hash?: string
+  edit_token: string
+  final_message?: string
+  created_at: string
+  updated_at: string
+}
+
+export interface Moment {
+  id: string
+  timeline_id: string
+  date: string
+  title: string
+  description: string
+  image_url?: string
+  music_url?: string
+  order_index: number
+  created_at: string
+  updated_at: string
+}
+
+export interface Payment {
+  id: string
+  timeline_id: string
+  stripe_payment_intent_id: string
+  plan_type: PlanType
+  amount: number
+  status: 'pending' | 'succeeded' | 'failed'
+  created_at: string
+  updated_at: string
+}
+
+export interface TimelineWithMoments extends Timeline {
+  moments: Moment[]
+}
+
