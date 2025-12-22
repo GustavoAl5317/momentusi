@@ -174,3 +174,5 @@ app/
 - [ ] Integração com mais redes sociais
 
 
+
+
