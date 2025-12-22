@@ -59,10 +59,22 @@ export async function POST(request: NextRequest) {
 
     const amount = PLAN_PRICES[planType]
     
-    // Obter URL do site - tentar várias fontes
+    // Detectar se estamos no Vercel
+    const isVercel = !!process.env.VERCEL
+    const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null
+    const vercelEnv = process.env.VERCEL_ENV // 'production', 'preview', 'development'
+    const isProduction = vercelEnv === 'production' || (process.env.NODE_ENV === 'production' && !vercelEnv)
+    
+    // Obter URL do site - tentar várias fontes em ordem de prioridade
     let siteUrl = process.env.NEXT_PUBLIC_SITE_URL
     
-    // Se não estiver definida, tentar obter do request
+    // Se não estiver definida e estivermos no Vercel, usar a URL do Vercel
+    if (!siteUrl && isVercel && vercelUrl) {
+      siteUrl = vercelUrl
+      console.log('Usando URL do Vercel:', siteUrl)
+    }
+    
+    // Se ainda não estiver definida, tentar obter do request
     if (!siteUrl) {
       const origin = request.headers.get('origin') || request.headers.get('host')
       if (origin) {
@@ -71,21 +83,38 @@ export async function POST(request: NextRequest) {
           siteUrl = origin
         } else {
           // Adicionar protocolo baseado no ambiente
-          const protocol = process.env.NODE_ENV === 'production' ? 'https://' : 'http://'
+          const protocol = isProduction ? 'https://' : 'http://'
           siteUrl = `${protocol}${origin}`
         }
       }
     }
     
-    // Fallback para localhost em desenvolvimento
+    // Fallback baseado no ambiente
     if (!siteUrl) {
-      siteUrl = process.env.NODE_ENV === 'production' 
-        ? 'https://momentusi.vercel.app' // URL padrão do Vercel
-        : 'http://localhost:3000'
+      if (isProduction) {
+        // Em produção, usar URL padrão do Vercel ou do domínio configurado
+        siteUrl = vercelUrl || 'https://momentusi.vercel.app'
+      } else {
+        // Em desenvolvimento, usar localhost
+        siteUrl = 'http://localhost:3000'
+      }
     }
     
     // Garantir que a URL não tenha barra no final e seja válida
-    const cleanSiteUrl = siteUrl.replace(/\/$/, '').trim()
+    let cleanSiteUrl = siteUrl.replace(/\/$/, '').trim()
+    
+    // Se estiver em produção e a URL for localhost, substituir pela URL do Vercel
+    const isLocalhost = cleanSiteUrl.includes('localhost') || cleanSiteUrl.includes('127.0.0.1')
+    if (isProduction && isLocalhost) {
+      if (vercelUrl) {
+        cleanSiteUrl = vercelUrl
+        console.log('⚠️ URL localhost detectada em produção. Substituindo por:', cleanSiteUrl)
+      } else {
+        // Se não tiver URL do Vercel, usar a URL padrão
+        cleanSiteUrl = 'https://momentusi.vercel.app'
+        console.log('⚠️ URL localhost detectada em produção. Usando URL padrão:', cleanSiteUrl)
+      }
+    }
     
     // Validar URL
     if (!cleanSiteUrl || (!cleanSiteUrl.startsWith('http://') && !cleanSiteUrl.startsWith('https://'))) {
@@ -98,12 +127,14 @@ export async function POST(request: NextRequest) {
       )
     }
     
-    // Validações específicas por ambiente
-    const isLocalhost = cleanSiteUrl.includes('localhost') || cleanSiteUrl.includes('127.0.0.1')
-    
-    if (isMercadoPagoProduction && isLocalhost) {
+    // Validação final: não permitir localhost em produção do Mercado Pago
+    const finalIsLocalhost = cleanSiteUrl.includes('localhost') || cleanSiteUrl.includes('127.0.0.1')
+    if (isMercadoPagoProduction && finalIsLocalhost) {
       return NextResponse.json(
-        { error: 'NEXT_PUBLIC_SITE_URL não pode ser localhost em produção. Use uma URL pública (ex: https://seusite.com)' },
+        { 
+          error: 'NEXT_PUBLIC_SITE_URL não pode ser localhost em produção do Mercado Pago. Use uma URL pública (ex: https://seusite.com)',
+          hint: `URL atual: ${cleanSiteUrl}. Configure NEXT_PUBLIC_SITE_URL=https://momentusi.vercel.app no Vercel`
+        },
         { status: 400 }
       )
     }
