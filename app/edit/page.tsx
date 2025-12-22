@@ -1,10 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import TimelineEditor from '@/components/TimelineEditor'
 
-export default function EditPage() {
+function EditPageContent() {
   const searchParams = useSearchParams()
   const token = searchParams.get('token')
   const timelineIdFromUrl = searchParams.get('timelineId')
@@ -56,6 +56,21 @@ export default function EditPage() {
     <div className="min-h-screen bg-gray-50">
       <TimelineEditor editToken={token} timelineId={timelineId} />
     </div>
+  )
+}
+
+export default function EditPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Carregando...</p>
+        </div>
+      </div>
+    }>
+      <EditPageContent />
+    </Suspense>
   )
 }
 
