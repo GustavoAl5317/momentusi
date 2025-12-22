@@ -42,6 +42,18 @@ Este documento explica como configurar as variáveis de ambiente necessárias no
 - **Padrão**: Detectado automaticamente pelo prefixo do token
 - **Uso**: Use apenas se quiser forçar um ambiente específico
 
+### 3. Variáveis da Aplicação
+
+#### `NEXT_PUBLIC_SITE_URL` ⚠️ OBRIGATÓRIA (para checkout)
+- **O que é**: URL base do seu site (usada para URLs de retorno do Mercado Pago)
+- **Formato**: 
+  - Desenvolvimento: `http://localhost:3000`
+  - Produção: `https://momentusi.vercel.app` (ou seu domínio customizado)
+- **Exemplo (produção)**: `https://momentusi.vercel.app`
+- **Exemplo (desenvolvimento)**: `http://localhost:3000`
+- **Erro se faltar ou inválida**: "NEXT_PUBLIC_SITE_URL deve ser uma URL válida"
+- **Nota**: Se não estiver definida, o sistema tentará detectar automaticamente do request, mas é recomendado configurá-la explicitamente
+
 ## Como Configurar no Vercel
 
 ### Passo a Passo:
@@ -72,6 +84,7 @@ Este documento explica como configurar as variáveis de ambiente necessárias no
    - ✅ `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - ✅ `SUPABASE_SERVICE_ROLE_KEY`
    - ✅ `MERCADOPAGO_ACCESS_TOKEN`
+   - ✅ `NEXT_PUBLIC_SITE_URL` (obrigatória para checkout funcionar)
    - ⚠️ **IMPORTANTE**: Se qualquer uma dessas variáveis estiver faltando, a aplicação não funcionará!
 
 6. **Faça um novo Deploy**
@@ -127,6 +140,17 @@ Após configurar as variáveis e fazer o deploy, você pode verificar se estão 
   2. Verifique se o token está correto (copie e cole diretamente do dashboard do Mercado Pago)
   3. Verifique se não há espaços extras no início ou fim do valor
   4. Faça um novo deploy após adicionar
+
+### Erro: "NEXT_PUBLIC_SITE_URL deve ser uma URL válida"
+- ✅ **CAUSA**: A variável `NEXT_PUBLIC_SITE_URL` não está configurada ou está com valor inválido
+- ✅ **SOLUÇÃO**: 
+  1. Vá em Vercel Dashboard > Settings > Environment Variables
+  2. Adicione `NEXT_PUBLIC_SITE_URL` com o valor:
+     - **Produção**: `https://momentusi.vercel.app` (ou seu domínio customizado)
+     - **Preview**: Use a URL do preview do Vercel (ex: `https://seu-projeto-git-branch.vercel.app`)
+  3. Certifique-se de que a URL começa com `http://` ou `https://`
+  4. Não adicione barra no final (ex: use `https://seusite.com` e não `https://seusite.com/`)
+  5. Faça um novo deploy após adicionar
 
 ### Variáveis não estão sendo carregadas
 - ✅ Certifique-se de que fez um novo deploy após adicionar as variáveis

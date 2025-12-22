@@ -58,15 +58,42 @@ export async function POST(request: NextRequest) {
     }
 
     const amount = PLAN_PRICES[planType]
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+    
+    // Obter URL do site - tentar várias fontes
+    let siteUrl = process.env.NEXT_PUBLIC_SITE_URL
+    
+    // Se não estiver definida, tentar obter do request
+    if (!siteUrl) {
+      const origin = request.headers.get('origin') || request.headers.get('host')
+      if (origin) {
+        // Se origin já tem protocolo, usar diretamente
+        if (origin.startsWith('http://') || origin.startsWith('https://')) {
+          siteUrl = origin
+        } else {
+          // Adicionar protocolo baseado no ambiente
+          const protocol = process.env.NODE_ENV === 'production' ? 'https://' : 'http://'
+          siteUrl = `${protocol}${origin}`
+        }
+      }
+    }
+    
+    // Fallback para localhost em desenvolvimento
+    if (!siteUrl) {
+      siteUrl = process.env.NODE_ENV === 'production' 
+        ? 'https://momentusi.vercel.app' // URL padrão do Vercel
+        : 'http://localhost:3000'
+    }
     
     // Garantir que a URL não tenha barra no final e seja válida
-    const cleanSiteUrl = siteUrl.replace(/\/$/, '')
+    const cleanSiteUrl = siteUrl.replace(/\/$/, '').trim()
     
     // Validar URL
-    if (!cleanSiteUrl || !cleanSiteUrl.startsWith('http')) {
+    if (!cleanSiteUrl || (!cleanSiteUrl.startsWith('http://') && !cleanSiteUrl.startsWith('https://'))) {
       return NextResponse.json(
-        { error: 'NEXT_PUBLIC_SITE_URL deve ser uma URL válida (ex: http://localhost:3000 ou https://seusite.com)' },
+        { 
+          error: 'NEXT_PUBLIC_SITE_URL deve ser uma URL válida (ex: http://localhost:3000 ou https://seusite.com)',
+          hint: `URL atual: ${cleanSiteUrl || '(vazia)'}. Configure NEXT_PUBLIC_SITE_URL no Vercel ou no arquivo .env.local`
+        },
         { status: 400 }
       )
     }
