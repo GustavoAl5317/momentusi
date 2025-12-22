@@ -203,10 +203,13 @@ export async function POST(request: NextRequest) {
         pending: pendingUrl,
       },
       payment_methods: {
-        excluded_payment_methods: [],
-        excluded_payment_types: [],
+        // IMPORTANTE: Não incluir excluded_payment_methods e excluded_payment_types vazios
+        // Arrays vazios com objetos vazios podem causar o botão ficar desabilitado
         installments: 12, // Permitir até 12x
         default_installments: 1, // Padrão: pagamento à vista
+        // Se precisar excluir métodos específicos, adicione aqui:
+        // excluded_payment_methods: [{ id: "method_id" }],
+        // excluded_payment_types: [{ id: "type_id" }],
       },
       binary_mode: false, // Permitir pagamentos pendentes (necessário para Pix)
       auto_return: 'approved', // Redirecionar automaticamente quando aprovado
