@@ -11,6 +11,11 @@ function CheckoutPageContent() {
   const [email, setEmail] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState('')
+  
+  // Validar se o email é válido para habilitar o botão
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+  const isEmailValid = email.trim().length > 0 && emailRegex.test(email.trim())
+  const canSubmit = isEmailValid && !isProcessing && timelineId && plan
 
   useEffect(() => {
     if (!timelineId || !plan) {
@@ -108,7 +113,7 @@ function CheckoutPageContent() {
 
           <button
             type="submit"
-            disabled={isProcessing}
+            disabled={!canSubmit}
             className="w-full bg-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isProcessing ? 'Processando...' : 'Pagar com Mercado Pago'}

@@ -42,6 +42,16 @@ export async function POST(request: NextRequest) {
 
     // Garantir que plan seja do tipo correto
     const planType: PlanType = plan as PlanType
+    
+    // Validar formato do email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const normalizedEmail = email.trim().toLowerCase()
+    if (!emailRegex.test(normalizedEmail)) {
+      return NextResponse.json(
+        { error: 'Email inválido. Por favor, insira um email válido.' },
+        { status: 400 }
+      )
+    }
 
     // Buscar timeline
     const { data: timeline, error: timelineError } = await supabaseAdmin
@@ -179,7 +189,13 @@ export async function POST(request: NextRequest) {
         },
       ],
       payer: {
-        email: email,
+        email: normalizedEmail, // Email normalizado e validado
+        // Nota: O Mercado Pago pode exigir mais informações do payer em alguns casos
+        // Se o botão continuar desabilitado, pode ser necessário adicionar:
+        // name: "Nome do Cliente",
+        // surname: "Sobrenome",
+        // phone: { area_code: "11", number: "999999999" }
+        // Mas isso requer coletar esses dados no formulário
       },
       back_urls: {
         success: successUrl,
@@ -190,8 +206,10 @@ export async function POST(request: NextRequest) {
         excluded_payment_methods: [],
         excluded_payment_types: [],
         installments: 12, // Permitir até 12x
+        default_installments: 1, // Padrão: pagamento à vista
       },
       binary_mode: false, // Permitir pagamentos pendentes (necessário para Pix)
+      auto_return: 'approved', // Redirecionar automaticamente quando aprovado
       external_reference: timelineId,
       metadata: {
         timeline_id: timelineId,
@@ -228,18 +246,74 @@ export async function POST(request: NextRequest) {
       body: preferenceBody,
     })
     
-    // Log da resposta (sem dados sensíveis)
-    console.log('Preference criada:', {
-      id: preference.id,
-      has_init_point: !!preference.init_point,
-      has_sandbox_init_point: !!preference.sandbox_init_point,
-      payment_methods: (preference as any).payment_methods || 'N/A',
-      items_count: (preference as any).items?.length || 0,
-    })
+    // Log detalhado da resposta para diagnóstico
+    const preferenceData = preference as any
     
-    // Validar que a preference foi criada corretamente
+    // IMPORTANTE: Verificar se o email está na resposta (pode não estar mesmo sendo enviado)
+    const payerEmailInResponse = preferenceData.payer?.email
+    const payerEmailSent = normalizedEmail
+    
+    console.log('=== PREFERENCE CRIADA - DIAGNÓSTICO COMPLETO ===')
+    console.log('ID:', preference.id)
+    console.log('init_point:', preference.init_point ? '✅ SIM' : '❌ NÃO')
+    console.log('sandbox_init_point:', preference.sandbox_init_point ? '✅ SIM' : '❌ NÃO')
+    console.log('Email ENVIADO:', payerEmailSent ? '✅ ' + payerEmailSent.split('@')[0] + '@***' : '❌ NÃO')
+    console.log('Email RETORNADO na resposta:', payerEmailInResponse ? '✅ ' + payerEmailInResponse.split('@')[0] + '@***' : '⚠️ NÃO RETORNADO (pode causar botão desabilitado)')
+    console.log('Items count:', preferenceData.items?.length || 0)
+    console.log('Payment methods:', JSON.stringify(preferenceData.payment_methods || {}, null, 2))
+    console.log('Back URLs:', {
+      success: preferenceData.back_urls?.success ? '✅ OK' : '❌ FALTANDO',
+      failure: preferenceData.back_urls?.failure ? '✅ OK' : '❌ FALTANDO',
+      pending: preferenceData.back_urls?.pending ? '✅ OK' : '❌ FALTANDO',
+    })
+    console.log('Binary mode:', preferenceData.binary_mode)
+    console.log('Auto return:', preferenceData.auto_return)
+    console.log('Notification URL:', notificationUrl ? '✅ Configurada' : '⚠️ Não configurada (localhost)')
+    console.log('Site URL usado:', cleanSiteUrl)
+    
+    // Verificar se há erros na resposta
+    if (preferenceData.error) {
+      console.error('❌ ERRO na preference do Mercado Pago:', preferenceData.error)
+      throw new Error(`Erro ao criar preference: ${preferenceData.error.message || JSON.stringify(preferenceData.error)}`)
+    }
+    
+    // Validações críticas que podem causar botão desabilitado
     if (!preference.id) {
       throw new Error('Preference não foi criada corretamente pelo Mercado Pago')
+    }
+    
+    // IMPORTANTE: O Mercado Pago pode não retornar o email na resposta mesmo que tenha sido enviado
+    // Isso é normal em alguns casos, mas pode causar o botão ficar desabilitado
+    if (!preferenceData.payer) {
+      console.error('❌ ERRO CRÍTICO: Payer não está na resposta do Mercado Pago')
+      console.error('⚠️ Isso pode causar o botão ficar desabilitado')
+      // Não lançar erro fatal aqui, pois o email foi enviado corretamente
+      // O problema pode ser do lado do Mercado Pago
+    } else if (!preferenceData.payer.email && !payerEmailSent) {
+      console.error('❌ ERRO CRÍTICO: Email do payer não foi enviado nem retornado')
+      throw new Error('Email do payer não configurado corretamente')
+    } else if (!preferenceData.payer.email && payerEmailSent) {
+      console.warn('⚠️ AVISO: Email foi enviado mas não retornado na resposta do Mercado Pago')
+      console.warn('⚠️ Isso pode causar o botão "Criar Pix" ficar desabilitado')
+      console.warn('⚠️ Possíveis causas: limitação do Mercado Pago ou configuração da conta')
+      console.warn('⚠️ Solução: Verifique a configuração da conta no Mercado Pago ou contate o suporte')
+    }
+    
+    if (!preferenceData.back_urls || !preferenceData.back_urls.success) {
+      console.error('❌ ERRO CRÍTICO: Back URLs não estão configuradas')
+      throw new Error('Back URLs não configuradas corretamente na preference do Mercado Pago')
+    }
+    
+    // Verificar se o item tem preço válido
+    if (!preferenceData.items || preferenceData.items.length === 0) {
+      console.error('❌ ERRO CRÍTICO: Nenhum item na preference')
+      throw new Error('Nenhum item configurado na preference do Mercado Pago')
+    }
+    
+    const firstItem = preferenceData.items[0]
+    if (!firstItem.unit_price || firstItem.unit_price <= 0) {
+      console.error('❌ ERRO CRÍTICO: Preço do item inválido:', firstItem.unit_price)
+      throw new Error('Preço do item inválido na preference do Mercado Pago')
     }
 
     // Salvar payment no banco
