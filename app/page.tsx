@@ -27,7 +27,7 @@ export default function Home() {
             </div>
 
             {/* Título principal */}
-            <h1 className="text-7xl md:text-8xl lg:text-9xl font-black mb-6 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-400 bg-clip-text text-transparent animate-gradient leading-tight">
+            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black mb-6 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-400 bg-clip-text text-transparent animate-gradient leading-tight">
               Momentusi
             </h1>
             
