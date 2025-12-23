@@ -140,67 +140,67 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
     return []
   }
 
-  // Aplicar tema com estilos mais distintos
+  // Aplicar tema escuro com azul escuro e rosa
   const themeClasses = {
     default: {
-      bg: 'bg-gradient-to-br from-pink-50 via-white to-purple-50',
-      card: 'bg-white shadow-lg border border-pink-100',
-      text: 'text-gray-900',
-      accent: 'text-pink-600',
-      button: 'bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700',
-      dateBadge: 'bg-gradient-to-r from-pink-500 to-purple-500',
-      marker: 'bg-gradient-to-br from-pink-500 to-purple-500',
-      line: 'from-pink-400 via-purple-400 to-pink-400',
-      headerBlob1: 'bg-pink-200',
-      headerBlob2: 'bg-purple-200',
+      bg: 'bg-gradient-to-b from-indigo-950 via-purple-950 to-indigo-950',
+      card: 'bg-indigo-900 shadow-xl border-2 border-indigo-600',
+      text: 'text-indigo-50',
+      accent: 'text-purple-300',
+      button: 'bg-purple-600 hover:bg-purple-700 text-white',
+      dateBadge: 'bg-purple-600 text-white border-2 border-purple-400',
+      marker: 'bg-purple-500',
+      line: 'bg-gradient-to-b from-purple-500 via-indigo-500 to-purple-500',
+      headerBlob1: 'bg-purple-600/20',
+      headerBlob2: 'bg-indigo-600/20',
     },
     romantic: {
-      bg: 'bg-gradient-to-br from-rose-100 via-pink-50 to-red-50',
-      card: 'bg-white shadow-xl border-2 border-rose-200',
-      text: 'text-gray-900',
-      accent: 'text-rose-600',
-      button: 'bg-gradient-to-r from-rose-500 to-pink-500 hover:from-rose-600 hover:to-pink-600',
-      dateBadge: 'bg-gradient-to-r from-rose-500 to-pink-500',
-      marker: 'bg-gradient-to-br from-rose-500 to-pink-500',
-      line: 'from-rose-400 via-pink-400 to-rose-400',
-      headerBlob1: 'bg-rose-200',
-      headerBlob2: 'bg-pink-200',
+      bg: 'bg-gradient-to-b from-rose-900 via-pink-900 to-rose-900',
+      card: 'bg-rose-800 shadow-xl border-2 border-rose-500',
+      text: 'text-rose-50',
+      accent: 'text-pink-300',
+      button: 'bg-pink-600 hover:bg-pink-700 text-white',
+      dateBadge: 'bg-pink-600 text-white border-2 border-pink-400',
+      marker: 'bg-pink-500',
+      line: 'bg-gradient-to-b from-pink-500 via-rose-500 to-pink-500',
+      headerBlob1: 'bg-pink-600/20',
+      headerBlob2: 'bg-rose-600/20',
     },
     elegant: {
-      bg: 'bg-gradient-to-br from-slate-50 via-gray-50 to-slate-100',
-      card: 'bg-white shadow-2xl border-2 border-gray-300',
-      text: 'text-gray-900',
-      accent: 'text-slate-700',
-      button: 'bg-gradient-to-r from-slate-700 to-gray-800 hover:from-slate-800 hover:to-gray-900',
-      dateBadge: 'bg-gradient-to-r from-slate-600 to-gray-700',
-      marker: 'bg-gradient-to-br from-slate-600 to-gray-700',
-      line: 'from-slate-400 via-gray-400 to-slate-400',
-      headerBlob1: 'bg-slate-200',
-      headerBlob2: 'bg-gray-200',
+      bg: 'bg-gradient-to-b from-slate-800 via-gray-800 to-slate-800',
+      card: 'bg-slate-700 shadow-xl border-2 border-slate-500',
+      text: 'text-slate-100',
+      accent: 'text-gray-300',
+      button: 'bg-gray-700 hover:bg-gray-800 text-white',
+      dateBadge: 'bg-gray-700 text-white border-2 border-gray-500',
+      marker: 'bg-gray-600',
+      line: 'bg-gradient-to-b from-gray-500 via-slate-500 to-gray-500',
+      headerBlob1: 'bg-gray-600/20',
+      headerBlob2: 'bg-slate-600/20',
     },
     vintage: {
-      bg: 'bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50',
-      card: 'bg-amber-50 shadow-xl border-2 border-amber-300',
-      text: 'text-amber-900',
-      accent: 'text-amber-700',
-      button: 'bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700',
-      dateBadge: 'bg-gradient-to-r from-amber-500 to-orange-500',
-      marker: 'bg-gradient-to-br from-amber-500 to-orange-500',
-      line: 'from-amber-400 via-orange-400 to-amber-400',
-      headerBlob1: 'bg-amber-200',
-      headerBlob2: 'bg-orange-200',
+      bg: 'bg-gradient-to-b from-amber-900 via-orange-900 to-amber-900',
+      card: 'bg-amber-800 shadow-xl border-2 border-amber-500',
+      text: 'text-amber-50',
+      accent: 'text-orange-300',
+      button: 'bg-orange-600 hover:bg-orange-700 text-white',
+      dateBadge: 'bg-orange-600 text-white border-2 border-orange-400',
+      marker: 'bg-orange-500',
+      line: 'bg-gradient-to-b from-orange-500 via-amber-500 to-orange-500',
+      headerBlob1: 'bg-orange-600/20',
+      headerBlob2: 'bg-amber-600/20',
     },
     modern: {
-      bg: 'bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50',
-      card: 'bg-white shadow-xl border-2 border-indigo-200',
-      text: 'text-gray-900',
-      accent: 'text-indigo-600',
-      button: 'bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700',
-      dateBadge: 'bg-gradient-to-r from-indigo-500 to-purple-500',
-      marker: 'bg-gradient-to-br from-indigo-500 to-purple-500',
-      line: 'from-indigo-400 via-purple-400 to-indigo-400',
-      headerBlob1: 'bg-indigo-200',
-      headerBlob2: 'bg-purple-200',
+      bg: 'bg-gradient-to-b from-cyan-950 via-blue-950 to-cyan-950',
+      card: 'bg-cyan-900 shadow-xl border-2 border-cyan-500',
+      text: 'text-cyan-50',
+      accent: 'text-sky-300',
+      button: 'bg-sky-600 hover:bg-sky-700 text-white',
+      dateBadge: 'bg-sky-600 text-white border-2 border-sky-400',
+      marker: 'bg-sky-500',
+      line: 'bg-gradient-to-b from-sky-500 via-cyan-500 to-sky-500',
+      headerBlob1: 'bg-sky-600/20',
+      headerBlob2: 'bg-cyan-600/20',
     },
   }
 
@@ -208,26 +208,26 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
 
   // Aplicar variáveis CSS dinâmicas para o tema
   const themeVars = {
-    '--line-color-1': timeline.theme === 'romantic' ? 'rgba(244, 63, 94, 0.8)' :
-                      timeline.theme === 'elegant' ? 'rgba(71, 85, 105, 0.8)' :
-                      timeline.theme === 'vintage' ? 'rgba(245, 158, 11, 0.8)' :
-                      timeline.theme === 'modern' ? 'rgba(99, 102, 241, 0.8)' :
-                      'rgba(236, 72, 153, 0.8)',
-    '--line-color-2': timeline.theme === 'romantic' ? 'rgba(236, 72, 153, 0.8)' :
+    '--line-color-1': timeline.theme === 'romantic' ? 'rgba(236, 72, 153, 0.8)' :
                       timeline.theme === 'elegant' ? 'rgba(100, 116, 139, 0.8)' :
                       timeline.theme === 'vintage' ? 'rgba(251, 146, 60, 0.8)' :
-                      timeline.theme === 'modern' ? 'rgba(139, 92, 246, 0.8)' :
-                      'rgba(168, 85, 247, 0.8)',
-    '--marker-color-1': timeline.theme === 'romantic' ? '#f43f5e' :
-                        timeline.theme === 'elegant' ? '#475569' :
-                        timeline.theme === 'vintage' ? '#f59e0b' :
-                        timeline.theme === 'modern' ? '#6366f1' :
-                        '#ec4899',
-    '--marker-color-2': timeline.theme === 'romantic' ? '#ec4899' :
+                      timeline.theme === 'modern' ? 'rgba(14, 165, 233, 0.8)' :
+                      'rgba(147, 51, 234, 0.8)',
+    '--line-color-2': timeline.theme === 'romantic' ? 'rgba(244, 63, 94, 0.8)' :
+                      timeline.theme === 'elegant' ? 'rgba(71, 85, 105, 0.8)' :
+                      timeline.theme === 'vintage' ? 'rgba(217, 119, 6, 0.8)' :
+                      timeline.theme === 'modern' ? 'rgba(6, 182, 212, 0.8)' :
+                      'rgba(99, 102, 241, 0.8)',
+    '--marker-color-1': timeline.theme === 'romantic' ? '#ec4899' :
                         timeline.theme === 'elegant' ? '#64748b' :
                         timeline.theme === 'vintage' ? '#fb923c' :
-                        timeline.theme === 'modern' ? '#8b5cf6' :
-                        '#a855f7',
+                        timeline.theme === 'modern' ? '#0ea5e9' :
+                        '#9333ea',
+    '--marker-color-2': timeline.theme === 'romantic' ? '#f43f5e' :
+                        timeline.theme === 'elegant' ? '#475569' :
+                        timeline.theme === 'vintage' ? '#d97706' :
+                        timeline.theme === 'modern' ? '#06b6d4' :
+                        '#6366f1',
   } as React.CSSProperties
 
   return (
@@ -237,9 +237,8 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
         {/* Decoração de fundo com partículas e ondas */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {/* Blobs animados */}
-          <div className={`absolute top-0 left-1/4 w-64 h-64 ${theme.headerBlob1} rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animate-breathe`}></div>
-          <div className={`absolute top-0 right-1/4 w-64 h-64 ${theme.headerBlob2} rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000 animate-breathe`}></div>
-          <div className={`absolute bottom-0 left-1/2 w-96 h-96 ${theme.headerBlob1} rounded-full mix-blend-multiply filter blur-2xl opacity-20 animate-blob animation-delay-4000 animate-parallax`}></div>
+          <div className={`absolute top-0 left-1/4 w-64 h-64 ${theme.headerBlob1} rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob`}></div>
+          <div className={`absolute top-0 right-1/4 w-64 h-64 ${theme.headerBlob2} rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000`}></div>
           
           {/* Partículas flutuantes */}
           {[...Array(8)].map((_, i) => (
@@ -262,12 +261,12 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
         </div>
 
         <div className="relative z-10">
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent animate-gradient animate-breathe relative inline-block">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent animate-gradient animate-breathe relative inline-block">
             <span className="relative z-10">{timeline.title}</span>
-            <span className="absolute inset-0 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent blur-xl opacity-50 animate-pulse"></span>
+            <span className="absolute inset-0 bg-gradient-to-r from-pink-500 to-rose-500 bg-clip-text text-transparent blur-xl opacity-50 animate-pulse"></span>
           </h1>
           {timeline.subtitle && (
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 font-light animate-fadeInUp animate-parallax" style={{ animationDelay: '0.3s' }}>
+            <p className={`text-xl md:text-2xl ${theme.text} mb-12 font-light animate-fadeInUp animate-parallax`} style={{ animationDelay: '0.3s' }}>
               {timeline.subtitle}
             </p>
           )}
@@ -282,11 +281,10 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
                 <span className="group-hover:animate-bounce">📤</span>
                 <span>Compartilhar</span>
               </span>
-              <span className="absolute inset-0 bg-white/20 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
             </button>
             <button
               onClick={handleCopyUrl}
-              className={`bg-white ${theme.accent} border-2 ${theme.accent.replace('text-', 'border-')} px-8 py-3 rounded-full font-semibold hover:bg-opacity-10 transition-all hover:scale-110 shadow-lg hover:shadow-xl flex items-center gap-2 relative overflow-hidden group animate-breathe`}
+              className={`bg-slate-800 text-pink-400 border-2 border-pink-500 px-8 py-3 rounded-full font-semibold hover:bg-pink-500/10 transition-all hover:scale-110 shadow-lg hover:shadow-xl flex items-center gap-2 relative overflow-hidden group animate-breathe`}
               style={{ animationDelay: '0.2s' }}
             >
               <span className="relative z-10 flex items-center gap-2">
@@ -302,7 +300,7 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
             {timeline.plan_type === 'complete' && (
               <button
                 onClick={() => setShowQRCode(!showQRCode)}
-                className={`bg-white ${theme.accent} border-2 ${theme.accent.replace('text-', 'border-')} px-8 py-3 rounded-full font-semibold hover:bg-opacity-10 transition-all hover:scale-110 shadow-lg hover:shadow-xl flex items-center gap-2 relative overflow-hidden group animate-breathe`}
+                className={`${theme.button} text-white border-2 ${theme.button.replace('bg-', 'border-').replace(' hover:bg-', '')} px-8 py-3 rounded-full font-semibold transition-all hover:scale-110 shadow-lg hover:shadow-xl flex items-center gap-2`}
                 style={{ animationDelay: '0.4s' }}
               >
                 <span className="relative z-10 flex items-center gap-2">
@@ -320,7 +318,7 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
 
           {showQRCode && (
             <div className="flex flex-col items-center mb-12 animate-fadeIn">
-              <div className="bg-white p-6 rounded-2xl shadow-2xl border-2 border-pink-200 relative">
+              <div className={`${theme.card} p-6 rounded-2xl shadow-2xl relative`}>
                 {isExample && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-yellow-900 text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap">
                     ⚠️ APENAS EXEMPLO - QR Code não funcional
@@ -329,7 +327,7 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
                 <QRCodeSVG value={timelineUrl} size={200} />
               </div>
               {isExample && (
-                <p className="mt-3 text-sm text-gray-600 bg-yellow-50 border border-yellow-200 px-4 py-2 rounded-lg">
+                <p className="mt-3 text-sm text-amber-900 bg-amber-200 border border-amber-400 px-4 py-2 rounded-lg">
                   ⚠️ Este é um exemplo. O QR Code e link são apenas para demonstração.
                 </p>
               )}
@@ -346,7 +344,7 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
           )}
 
           {/* Indicador visual de timeline */}
-          <div className="flex items-center justify-center gap-2 text-gray-400">
+          <div className={`flex items-center justify-center gap-2 ${theme.text} opacity-70`}>
             <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-pink-400"></div>
             <span className="text-sm font-medium">Linha do Tempo</span>
             <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-purple-400"></div>
@@ -410,16 +408,16 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
           <div className="max-w-3xl mx-auto mt-20 mb-12">
             <div className="relative">
               {/* Marcador final na timeline */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 -top-8 w-6 h-6 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full border-4 border-white shadow-xl hidden md:block"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 -top-8 w-6 h-6 bg-gradient-to-br from-pink-500 to-rose-500 rounded-full border-4 border-slate-800 shadow-xl hidden md:block"></div>
               
-              <div className="bg-gradient-to-br from-pink-50 to-purple-50 rounded-3xl shadow-2xl p-10 md:p-12 text-center border-2 border-pink-200">
+              <div className={`${theme.card} rounded-3xl shadow-2xl p-10 md:p-12 text-center`}>
                 <div className="mb-6">
                   <span className="text-5xl">💌</span>
                 </div>
-                <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-6">
+                <h3 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent mb-6">
                   Carta Final
                 </h3>
-                <p className="text-gray-700 text-lg md:text-xl leading-relaxed whitespace-pre-line font-light">
+                <p className={`${theme.text} text-lg md:text-xl leading-relaxed whitespace-pre-line font-light`}>
                   {timeline.final_message}
                 </p>
               </div>
@@ -444,7 +442,7 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
 
       {/* Footer */}
       {timeline.plan_type === 'essential' && (
-        <footer className="container mx-auto px-4 py-8 text-center text-sm text-gray-500">
+        <footer className={`container mx-auto px-4 py-8 text-center text-sm ${theme.text} opacity-60`}>
           <p>
             Criado com{' '}
             <a

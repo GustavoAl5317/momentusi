@@ -28,87 +28,87 @@ export default function TimelinePreviewEditor({
   const [selectedMoment, setSelectedMoment] = useState<Moment | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  // Obter tema visual com estilos mais criativos
+  // Obter tema visual - cores sólidas e vibrantes
   const themeStyles = {
     default: {
-      bg: 'bg-gradient-to-br from-pink-50 via-purple-50 via-white to-pink-50',
-      bgPattern: 'radial-gradient(circle at 20% 50%, rgba(236, 72, 153, 0.1) 0%, transparent 50%), radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%)',
-      headerBlob1: 'bg-pink-300',
-      headerBlob2: 'bg-purple-300',
-      headerBlob3: 'bg-fuchsia-300',
-      dateBadge: 'from-pink-500 via-purple-500 to-pink-500',
-      markerColor1: '#ec4899',
-      markerColor2: '#a855f7',
-      lineColor1: '#ec4899',
-      lineColor2: '#a855f7',
-      accent: 'text-pink-600',
-      button: 'bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600',
-      cardStyle: 'bg-white/90 backdrop-blur-sm border-pink-200/50 shadow-pink-100',
-      titleGradient: 'from-pink-600 via-purple-600 to-pink-600',
+      bg: 'bg-gradient-to-b from-indigo-950 via-purple-950 to-indigo-950',
+      bgPattern: '',
+      headerBlob1: 'bg-purple-600/20',
+      headerBlob2: 'bg-indigo-600/20',
+      headerBlob3: '',
+      dateBadge: 'bg-purple-600 text-white border-2 border-purple-400',
+      markerColor1: '#9333ea',
+      markerColor2: '#6366f1',
+      lineColor1: '#9333ea',
+      lineColor2: '#6366f1',
+      accent: 'text-purple-300',
+      button: 'bg-purple-600 hover:bg-purple-700',
+      cardStyle: 'bg-indigo-900 shadow-xl border-2 border-indigo-600',
+      titleGradient: 'from-purple-300 to-indigo-300',
     },
     romantic: {
-      bg: 'bg-gradient-to-br from-rose-50 via-pink-50 via-rose-50 to-pink-50',
-      bgPattern: 'radial-gradient(circle at 30% 40%, rgba(244, 63, 94, 0.15) 0%, transparent 50%), radial-gradient(circle at 70% 60%, rgba(236, 72, 153, 0.15) 0%, transparent 50%)',
-      headerBlob1: 'bg-rose-300',
-      headerBlob2: 'bg-pink-300',
-      headerBlob3: 'bg-red-200',
-      dateBadge: 'from-rose-500 via-pink-500 to-rose-500',
-      markerColor1: '#f43f5e',
-      markerColor2: '#ec4899',
-      lineColor1: '#f43f5e',
-      lineColor2: '#ec4899',
-      accent: 'text-rose-600',
-      button: 'bg-gradient-to-r from-rose-600 via-pink-600 to-rose-600',
-      cardStyle: 'bg-white/90 backdrop-blur-sm border-rose-200/50 shadow-rose-100',
-      titleGradient: 'from-rose-600 via-pink-600 to-rose-600',
+      bg: 'bg-gradient-to-b from-rose-900 via-pink-900 to-rose-900',
+      bgPattern: '',
+      headerBlob1: 'bg-pink-600/20',
+      headerBlob2: 'bg-rose-600/20',
+      headerBlob3: '',
+      dateBadge: 'bg-pink-600 text-white border-2 border-pink-400',
+      markerColor1: '#ec4899',
+      markerColor2: '#f43f5e',
+      lineColor1: '#ec4899',
+      lineColor2: '#f43f5e',
+      accent: 'text-pink-300',
+      button: 'bg-pink-600 hover:bg-pink-700',
+      cardStyle: 'bg-rose-800 shadow-xl border-2 border-rose-500',
+      titleGradient: 'from-pink-300 to-rose-300',
     },
     modern: {
-      bg: 'bg-gradient-to-br from-blue-50 via-cyan-50 via-sky-50 to-blue-50',
-      bgPattern: 'radial-gradient(circle at 25% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%), radial-gradient(circle at 75% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 50%)',
-      headerBlob1: 'bg-blue-300',
-      headerBlob2: 'bg-cyan-300',
-      headerBlob3: 'bg-sky-300',
-      dateBadge: 'from-blue-500 via-cyan-500 to-blue-500',
-      markerColor1: '#3b82f6',
+      bg: 'bg-gradient-to-b from-cyan-950 via-blue-950 to-cyan-950',
+      bgPattern: '',
+      headerBlob1: 'bg-sky-600/20',
+      headerBlob2: 'bg-cyan-600/20',
+      headerBlob3: '',
+      dateBadge: 'bg-sky-600 text-white border-2 border-sky-400',
+      markerColor1: '#0ea5e9',
       markerColor2: '#06b6d4',
-      lineColor1: '#3b82f6',
+      lineColor1: '#0ea5e9',
       lineColor2: '#06b6d4',
-      accent: 'text-blue-600',
-      button: 'bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-600',
-      cardStyle: 'bg-white/90 backdrop-blur-sm border-blue-200/50 shadow-blue-100',
-      titleGradient: 'from-blue-600 via-cyan-600 to-blue-600',
+      accent: 'text-sky-300',
+      button: 'bg-sky-600 hover:bg-sky-700',
+      cardStyle: 'bg-cyan-900 shadow-xl border-2 border-cyan-500',
+      titleGradient: 'from-sky-300 to-cyan-300',
     },
     elegant: {
-      bg: 'bg-gradient-to-br from-slate-50 via-gray-50 via-zinc-50 to-slate-50',
-      bgPattern: 'radial-gradient(circle at 20% 30%, rgba(71, 85, 105, 0.08) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(100, 116, 139, 0.08) 0%, transparent 50%)',
-      headerBlob1: 'bg-slate-300',
-      headerBlob2: 'bg-gray-300',
-      headerBlob3: 'bg-zinc-300',
-      dateBadge: 'from-slate-600 via-gray-600 to-slate-600',
-      markerColor1: '#475569',
-      markerColor2: '#64748b',
-      lineColor1: '#475569',
-      lineColor2: '#64748b',
-      accent: 'text-slate-700',
-      button: 'bg-gradient-to-r from-slate-700 via-gray-700 to-slate-700',
-      cardStyle: 'bg-white/95 backdrop-blur-sm border-slate-200/60 shadow-slate-200',
-      titleGradient: 'from-slate-700 via-gray-700 to-slate-700',
+      bg: 'bg-gradient-to-b from-slate-800 via-gray-800 to-slate-800',
+      bgPattern: '',
+      headerBlob1: 'bg-gray-600/20',
+      headerBlob2: 'bg-slate-600/20',
+      headerBlob3: '',
+      dateBadge: 'bg-gray-700 text-white border-2 border-gray-500',
+      markerColor1: '#64748b',
+      markerColor2: '#475569',
+      lineColor1: '#64748b',
+      lineColor2: '#475569',
+      accent: 'text-slate-200',
+      button: 'bg-gray-700 hover:bg-gray-800',
+      cardStyle: 'bg-slate-700 shadow-xl border-2 border-slate-500',
+      titleGradient: 'from-gray-300 to-slate-300',
     },
     vintage: {
-      bg: 'bg-gradient-to-br from-amber-50 via-yellow-50 via-orange-50 to-amber-50',
-      bgPattern: 'radial-gradient(circle at 30% 50%, rgba(217, 119, 6, 0.12) 0%, transparent 50%), radial-gradient(circle at 70% 50%, rgba(234, 179, 8, 0.12) 0%, transparent 50%)',
-      headerBlob1: 'bg-amber-300',
-      headerBlob2: 'bg-yellow-300',
-      headerBlob3: 'bg-orange-200',
-      dateBadge: 'from-amber-600 via-yellow-600 to-amber-600',
-      markerColor1: '#d97706',
-      markerColor2: '#eab308',
-      lineColor1: '#d97706',
-      lineColor2: '#eab308',
-      accent: 'text-amber-700',
-      button: 'bg-gradient-to-r from-amber-600 via-yellow-600 to-amber-600',
-      cardStyle: 'bg-white/90 backdrop-blur-sm border-amber-200/50 shadow-amber-100',
-      titleGradient: 'from-amber-700 via-yellow-600 to-amber-700',
+      bg: 'bg-gradient-to-b from-amber-900 via-orange-900 to-amber-900',
+      bgPattern: '',
+      headerBlob1: 'bg-orange-600/20',
+      headerBlob2: 'bg-amber-600/20',
+      headerBlob3: '',
+      dateBadge: 'bg-orange-600 text-white border-2 border-orange-400',
+      markerColor1: '#fb923c',
+      markerColor2: '#d97706',
+      lineColor1: '#fb923c',
+      lineColor2: '#d97706',
+      accent: 'text-orange-300',
+      button: 'bg-orange-600 hover:bg-orange-700',
+      cardStyle: 'bg-amber-800 shadow-xl border-2 border-amber-500',
+      titleGradient: 'from-orange-300 to-amber-300',
     },
   }
 
@@ -133,10 +133,10 @@ export default function TimelinePreviewEditor({
 
   if (!title || moments.length === 0) {
     return (
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-12 text-center border-2 border-dashed border-gray-300">
+      <div className="bg-slate-800 rounded-2xl p-12 text-center border-2 border-dashed border-slate-600">
         <div className="text-6xl mb-4">👀</div>
-        <h3 className="text-2xl font-bold text-gray-700 mb-2">Preview</h3>
-        <p className="text-gray-500">
+        <h3 className="text-2xl font-bold text-slate-200 mb-2">Preview</h3>
+        <p className="text-slate-300">
           Adicione um título e pelo menos um momento para ver o preview
         </p>
       </div>
@@ -174,7 +174,7 @@ export default function TimelinePreviewEditor({
             {title}
           </h1>
           {subtitle && (
-            <p className="text-lg md:text-xl text-gray-700 mb-8 font-light tracking-wide">
+            <p className="text-lg md:text-xl text-slate-200 mb-8 font-light tracking-wide">
               {subtitle}
             </p>
           )}
@@ -204,7 +204,7 @@ export default function TimelinePreviewEditor({
           <div className="max-w-3xl mx-auto mt-20 mb-12">
             <div className="relative">
               {/* Marcador decorativo superior */}
-              <div className="absolute left-1/2 transform -translate-x-1/2 -top-8 w-8 h-8 bg-gradient-to-br from-pink-500 to-purple-500 rounded-full border-4 border-white shadow-2xl hidden md:block animate-pulse"></div>
+              <div className="absolute left-1/2 transform -translate-x-1/2 -top-8 w-8 h-8 bg-gradient-to-br from-pink-500 to-rose-500 rounded-full border-4 border-slate-800 shadow-2xl hidden md:block animate-pulse"></div>
               
               {/* Card principal com efeitos visuais */}
               <div className={`${themeVars.cardStyle} rounded-3xl shadow-2xl p-10 md:p-12 text-center border-2 relative overflow-hidden`}>
@@ -224,7 +224,7 @@ export default function TimelinePreviewEditor({
                     Carta Final
                   </h3>
                   <div className="w-24 h-1 bg-gradient-to-r from-transparent via-pink-500 to-transparent mx-auto mb-6"></div>
-                  <p className="text-gray-700 text-lg md:text-xl leading-relaxed whitespace-pre-line font-light">
+                  <p className="text-slate-100 text-lg md:text-xl leading-relaxed whitespace-pre-line font-light">
                     {finalMessage}
                   </p>
                 </div>

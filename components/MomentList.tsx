@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { Moment, PlanType } from '@/types'
 import { format } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
+import { normalizeMusicUrl } from '@/lib/musicUrlHelper'
 
 interface MomentListProps {
   moments: Moment[]
@@ -202,12 +203,15 @@ function MomentEditForm({
         imageUrls.push(...(moment.image_urls || (moment.image_url ? [moment.image_url] : [])))
       }
 
+      // Normalizar URL de música
+      const normalizedMusicUrl = musicUrl ? normalizeMusicUrl(musicUrl) : undefined
+
       onSave({
         ...moment,
         date,
         title,
         description,
-        music_url: musicUrl || undefined,
+        music_url: normalizedMusicUrl,
         image_url: imageUrls[0] || undefined, // Compatibilidade
         image_urls: imageUrls.length > 0 ? imageUrls : undefined,
       })
@@ -231,7 +235,7 @@ function MomentEditForm({
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
-            className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg"
+            className="w-full px-3 py-2 bg-white text-gray-900 text-sm sm:text-base border border-gray-300 rounded-lg"
           />
         </div>
         <div>
@@ -243,7 +247,7 @@ function MomentEditForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg"
+            className="w-full px-3 py-2 bg-white text-gray-900 text-sm sm:text-base border border-gray-300 rounded-lg"
           />
         </div>
       </div>
@@ -256,19 +260,45 @@ function MomentEditForm({
           onChange={(e) => setDescription(e.target.value)}
           required
           rows={3}
-          className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg resize-none"
+          className="w-full px-3 py-2 bg-white text-gray-900 text-sm sm:text-base border border-gray-300 rounded-lg resize-none"
         />
       </div>
       <div>
         <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-          Link de Música
+          Música (Spotify ou YouTube)
         </label>
-        <input
-          type="url"
-          value={musicUrl}
-          onChange={(e) => setMusicUrl(e.target.value)}
-          className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg"
-        />
+        <div className="space-y-2">
+          <input
+            type="text"
+            value={musicUrl}
+            onChange={(e) => setMusicUrl(e.target.value)}
+            placeholder="Cole a URL ou apenas o ID (ex: dQw4w9WgXcQ)"
+            className="w-full px-3 py-2 bg-white text-gray-900 text-sm sm:text-base border border-gray-300 rounded-lg"
+          />
+          <div className="flex gap-2">
+            <a
+              href="https://www.youtube.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span>▶️</span>
+              <span>Buscar no YouTube</span>
+            </a>
+            <a
+              href="https://open.spotify.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span>🎵</span>
+              <span>Buscar no Spotify</span>
+            </a>
+          </div>
+          <p className="text-xs text-gray-500">
+            💡 Dica: Você pode colar apenas o ID do vídeo/música (ex: dQw4w9WgXcQ) ou a URL completa
+          </p>
+        </div>
       </div>
       <div>
         <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">

@@ -198,25 +198,25 @@ export default function TimelineEditor({
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Carregando...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500 mx-auto"></div>
+          <p className="mt-4 text-gray-300">Carregando...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       {/* Header com botão voltar e tabs */}
-      <div className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
+      <div className="sticky top-0 z-50 bg-slate-900/95 backdrop-blur-md border-b border-pink-500/30 shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between max-w-7xl mx-auto py-3">
             {/* Botão Voltar */}
             <button
               onClick={() => router.push('/')}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors px-3 py-2 rounded-lg hover:bg-gray-100"
+              className="flex items-center gap-2 text-gray-300 hover:text-pink-400 transition-colors px-3 py-2 rounded-lg hover:bg-slate-800"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -230,8 +230,8 @@ export default function TimelineEditor({
                 onClick={() => setShowPreview(false)}
                 className={`px-3 sm:px-6 py-2 sm:py-4 text-sm sm:text-base font-semibold transition-all border-b-2 ${
                   !showPreview
-                    ? 'text-pink-600 border-pink-600'
-                    : 'text-gray-500 border-transparent hover:text-gray-700'
+                    ? 'text-pink-400 border-pink-500'
+                    : 'text-gray-400 border-transparent hover:text-pink-400'
                 }`}
               >
                 <span className="hidden sm:inline">✏️ </span>Editor
@@ -240,8 +240,8 @@ export default function TimelineEditor({
                 onClick={() => setShowPreview(true)}
                 className={`px-3 sm:px-6 py-2 sm:py-4 text-sm sm:text-base font-semibold transition-all border-b-2 ${
                   showPreview
-                    ? 'text-pink-600 border-pink-600'
-                    : 'text-gray-500 border-transparent hover:text-gray-700'
+                    ? 'text-pink-400 border-pink-500'
+                    : 'text-gray-400 border-transparent hover:text-pink-400'
                 }`}
               >
                 <span className="hidden sm:inline">👀 </span>Preview
@@ -267,7 +267,7 @@ export default function TimelineEditor({
       ) : (
         // Editor
         <div className="max-w-5xl mx-auto py-4 sm:py-8 px-4">
-          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 mb-6 border border-gray-100">
+          <div className="bg-slate-800/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl p-4 sm:p-6 md:p-8 lg:p-10 mb-6 border border-pink-500/30">
         <div className="text-center mb-6 sm:mb-8">
           <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full mb-3 sm:mb-4">
             <span className="text-2xl sm:text-3xl">✨</span>
@@ -275,12 +275,12 @@ export default function TimelineEditor({
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent mb-2">
             Criar Linha do Tempo
           </h1>
-          <p className="text-sm sm:text-base text-gray-600">Transforme seus momentos em uma história única</p>
+          <p className="text-sm sm:text-base text-gray-300">Transforme seus momentos em uma história única</p>
         </div>
 
         {/* Seleção de Plano */}
         <div className="mb-6 sm:mb-8">
-          <label className="block text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">
+          <label className="block text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">
             Escolha seu Plano
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -294,7 +294,7 @@ export default function TimelineEditor({
             >
               <div className="font-bold text-base sm:text-lg mb-1">Essencial</div>
               <div className="text-xl sm:text-2xl font-bold text-pink-600 mb-2">R$ 19,90</div>
-              <div className="text-xs sm:text-sm text-gray-600">Até 10 momentos</div>
+              <div className="text-xs sm:text-sm text-gray-300">Até 10 momentos</div>
             </button>
             <button
               onClick={() => setPlan('complete')}
@@ -306,27 +306,27 @@ export default function TimelineEditor({
             >
               <div className="font-bold text-base sm:text-lg mb-1">Completo</div>
               <div className="text-xl sm:text-2xl font-bold text-purple-600 mb-2">R$ 39,90</div>
-              <div className="text-xs sm:text-sm text-gray-600">Momentos ilimitados</div>
+              <div className="text-xs sm:text-sm text-gray-300">Momentos ilimitados</div>
             </button>
           </div>
         </div>
 
         {/* Título e Subtítulo */}
         <div className="mb-4 sm:mb-6">
-          <label className="block text-sm sm:text-base font-semibold text-gray-900 mb-2">
-            Título Principal <span className="text-pink-600">*</span>
+          <label className="block text-sm sm:text-base font-semibold text-white mb-2">
+            Título Principal <span className="text-pink-400">*</span>
           </label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Ex: Nossa História de Amor"
-            className="w-full px-4 sm:px-5 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-base sm:text-lg"
+            className="w-full px-4 sm:px-5 py-2.5 sm:py-3 bg-white text-gray-900 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-base sm:text-lg"
           />
         </div>
 
         <div className="mb-4 sm:mb-6">
-          <label className="block text-sm sm:text-base font-semibold text-gray-900 mb-2">
+          <label className="block text-sm sm:text-base font-semibold text-white mb-2">
             Subtítulo <span className="text-gray-400 text-xs sm:text-sm">(opcional)</span>
           </label>
           <input
@@ -334,13 +334,13 @@ export default function TimelineEditor({
             value={subtitle}
             onChange={(e) => setSubtitle(e.target.value)}
             placeholder="Ex: Ana e João"
-            className="w-full px-4 sm:px-5 py-2.5 sm:py-3 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-base sm:text-lg"
+            className="w-full px-4 sm:px-5 py-2.5 sm:py-3 bg-white text-gray-900 border-2 border-gray-200 rounded-lg sm:rounded-xl focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-all text-base sm:text-lg"
           />
         </div>
 
         {/* Layout */}
         <div className="mb-4 sm:mb-6">
-          <label className="block text-sm sm:text-base font-semibold text-gray-900 mb-3 sm:mb-4">
+          <label className="block text-sm sm:text-base font-semibold text-white mb-3 sm:mb-4">
             Layout da Timeline
           </label>
           <div className="grid grid-cols-2 gap-3 sm:gap-4">
@@ -355,7 +355,7 @@ export default function TimelineEditor({
             >
               <div className="text-2xl sm:text-4xl mb-2">📊</div>
               <div className="font-bold text-sm sm:text-lg mb-1">Vertical</div>
-              <div className="text-xs sm:text-sm text-gray-600">Linha do tempo tradicional</div>
+              <div className="text-xs sm:text-sm text-gray-300">Linha do tempo tradicional</div>
             </button>
             <button
               type="button"
@@ -368,14 +368,14 @@ export default function TimelineEditor({
             >
               <div className="text-2xl sm:text-4xl mb-2">➡️</div>
               <div className="font-bold text-sm sm:text-lg mb-1">Horizontal</div>
-              <div className="text-xs sm:text-sm text-gray-600">Linha do tempo horizontal</div>
+              <div className="text-xs sm:text-sm text-gray-300">Linha do tempo horizontal</div>
             </button>
           </div>
         </div>
 
         {/* Tema */}
         <div className="mb-6 sm:mb-8">
-          <label className="block text-sm sm:text-base font-semibold text-gray-900 mb-3 sm:mb-4">
+          <label className="block text-sm sm:text-base font-semibold text-white mb-3 sm:mb-4">
             Tema Visual
           </label>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -383,7 +383,7 @@ export default function TimelineEditor({
               value="default"
               name="Padrão"
               icon="✨"
-              colors={['from-pink-500', 'to-purple-500']}
+              colors={['from-blue-500', 'to-indigo-500']}
               selected={theme === 'default'}
               onClick={() => setTheme('default')}
             />
@@ -401,7 +401,7 @@ export default function TimelineEditor({
                   value="elegant"
                   name="Elegante"
                   icon="👔"
-                  colors={['from-slate-600', 'to-gray-700']}
+                  colors={['from-neutral-600', 'to-neutral-700']}
                   selected={theme === 'elegant'}
                   onClick={() => setTheme('elegant')}
                 />
@@ -417,7 +417,7 @@ export default function TimelineEditor({
                   value="modern"
                   name="Moderno"
                   icon="🚀"
-                  colors={['from-indigo-500', 'to-purple-500']}
+                  colors={['from-cyan-500', 'to-sky-500']}
                   selected={theme === 'modern'}
                   onClick={() => setTheme('modern')}
                 />
@@ -430,10 +430,10 @@ export default function TimelineEditor({
         <div className="mb-6 sm:mb-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4 sm:mb-6">
             <div>
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+              <h2 className="text-xl sm:text-2xl font-bold text-white">
                 Momentos
               </h2>
-              <p className="text-gray-600 text-xs sm:text-sm mt-1">
+              <p className="text-gray-300 text-xs sm:text-sm mt-1">
                 {moments.length} {plan === 'essential' ? '/ 10' : ''} adicionados
               </p>
             </div>
@@ -446,7 +446,7 @@ export default function TimelineEditor({
             plan={plan}
           />
           {!canAddMore && (
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-gray-400 mt-2">
               Limite de momentos atingido. Upgrade para o plano Completo para
               adicionar mais momentos.
             </p>
@@ -457,7 +457,7 @@ export default function TimelineEditor({
         {plan === 'complete' && (
           <>
             <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-white mb-2">
                 Carta Final (opcional)
               </label>
               <textarea
@@ -465,7 +465,7 @@ export default function TimelineEditor({
                 onChange={(e) => setFinalMessage(e.target.value)}
                 placeholder="Uma mensagem especial para encerrar sua linha do tempo..."
                 rows={4}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                className="w-full px-4 py-2 bg-white text-gray-900 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
               />
             </div>
 
@@ -477,7 +477,7 @@ export default function TimelineEditor({
                   onChange={(e) => setIsPrivate(e.target.checked)}
                   className="w-4 h-4 text-pink-600 rounded focus:ring-pink-500"
                 />
-                <span className="text-sm font-medium text-gray-700">
+                <span className="text-sm font-medium text-white">
                   Página Privada
                 </span>
               </label>
@@ -499,7 +499,7 @@ export default function TimelineEditor({
           <button
             onClick={handleSave}
             disabled={isSaving}
-            className="w-full sm:flex-1 bg-gray-100 text-gray-700 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base font-semibold hover:bg-gray-200 transition-all disabled:opacity-50 shadow-md hover:shadow-lg"
+            className="w-full sm:flex-1 bg-slate-700 text-gray-200 px-6 sm:px-8 py-3 sm:py-4 rounded-full text-sm sm:text-base font-semibold hover:bg-slate-600 transition-all disabled:opacity-50 shadow-md hover:shadow-lg"
           >
             {isSaving ? 'Salvando...' : '💾 Salvar Rascunho'}
           </button>

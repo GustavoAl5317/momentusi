@@ -71,7 +71,7 @@ export default function TimelineVertical({
   }, [moments])
 
   return (
-    <div ref={containerRef} className="timeline-container relative max-w-4xl mx-auto px-3 sm:px-4 md:px-6">
+    <div ref={containerRef} className="timeline-container relative max-w-4xl mx-auto px-4">
       {/* Linha vertical da timeline - posicionada absolutamente para não ocupar espaço */}
       <div 
         className="timeline-line timeline-line-theme hidden md:block"
@@ -84,7 +84,7 @@ export default function TimelineVertical({
       ></div>
 
       {/* Momentos */}
-      <div className="space-y-8 sm:space-y-12 md:space-y-20 relative z-10">
+      <div className="space-y-16 md:space-y-20 relative z-10">
         {moments.map((moment, index) => (
           <div
             key={moment.id}
@@ -105,7 +105,7 @@ export default function TimelineVertical({
                 : 'md:ml-0 md:mr-auto md:pr-8'
             }`}>
               <div 
-                className={`timeline-card animate-fadeInUp cursor-pointer group relative ${theme.cardStyle || 'bg-white/90 backdrop-blur-sm border-pink-200/50 shadow-pink-100'}`}
+                className={`timeline-card animate-fadeInUp cursor-pointer group relative ${theme.cardStyle || 'bg-slate-800/90 backdrop-blur-sm border-pink-500/30 shadow-xl'}`}
                 style={{ 
                   animationDelay: `${index * 0.15}s`,
                   borderColor: theme.cardStyle ? undefined : 'rgba(236, 72, 153, 0.2)',
@@ -113,13 +113,13 @@ export default function TimelineVertical({
                 onClick={() => onMomentClick(moment)}
               >
                 {/* Indicador de clique */}
-                <div className="absolute top-2 right-2 sm:top-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold text-gray-700 shadow-lg z-30">
+                <div className="absolute top-2 right-2 sm:top-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-700/90 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold text-pink-300 shadow-lg z-30">
                   <span className="hidden sm:inline">Clique para ver mais</span>
                   <span className="sm:hidden">Ver mais</span>
                 </div>
                 
                 {/* Data destacada */}
-                <div className={`timeline-date bg-gradient-to-r ${theme.dateBadge || 'from-pink-500 to-purple-500'} relative z-10 bg-size-200 animate-gradient text-xs sm:text-sm md:text-base`}>
+                <div className={`timeline-date ${theme.dateBadge || 'bg-purple-600 text-white border-2 border-purple-400'} relative z-10 text-xs sm:text-sm md:text-base`}>
                   <span className="relative z-10">
                     {format(new Date(moment.date), "dd 'de' MMMM 'de' yyyy", {
                       locale: ptBR,
@@ -128,12 +128,12 @@ export default function TimelineVertical({
                 </div>
 
                 {/* Título */}
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight group-hover:scale-105 transition-transform duration-300 relative z-10 break-words overflow-wrap-anywhere px-0">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-3 sm:mb-4 leading-tight group-hover:scale-105 transition-transform duration-300 relative z-10 break-words overflow-wrap-anywhere px-0">
                   {moment.title}
                 </h2>
 
                 {/* Descrição */}
-                <p className="text-gray-700 leading-relaxed text-sm sm:text-base md:text-lg mb-4 sm:mb-6 group-hover:text-gray-900 transition-colors duration-300 relative z-10 break-words whitespace-pre-wrap overflow-wrap-anywhere px-0">
+                <p className="text-gray-300 leading-relaxed text-sm sm:text-base md:text-lg mb-4 sm:mb-6 group-hover:text-gray-100 transition-colors duration-300 relative z-10 break-words whitespace-pre-wrap overflow-wrap-anywhere px-0">
                   {moment.description}
                 </p>
 

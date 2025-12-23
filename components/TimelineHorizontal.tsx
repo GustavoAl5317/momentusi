@@ -61,7 +61,7 @@ export default function TimelineHorizontal({
       {/* Container com scroll horizontal */}
       <div 
         ref={scrollContainerRef}
-        className="overflow-x-auto overflow-y-hidden pb-12 scrollbar-hide relative"
+        className="overflow-x-scroll overflow-y-hidden pb-12 scrollbar-hide relative"
         style={{
           scrollbarWidth: 'none',
           msOverflowStyle: 'none',
@@ -97,13 +97,13 @@ export default function TimelineHorizontal({
                   onClick={() => onMomentClick(moment)}
                 >
                   {/* Indicador de clique */}
-                  <div className="absolute top-2 right-2 sm:top-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold text-gray-700 shadow-lg z-10">
+                  <div className="absolute top-2 right-2 sm:top-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-700/90 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold text-pink-300 shadow-lg z-10">
                     <span className="hidden sm:inline">Clique para ver mais</span>
                     <span className="sm:hidden">Ver mais</span>
                   </div>
                   
                   {/* Data destacada */}
-                  <div className={`timeline-date bg-gradient-to-r ${theme.dateBadge} mb-3 sm:mb-4 relative z-10 text-xs sm:text-sm md:text-base`}>
+                  <div className={`timeline-date ${theme.dateBadge} mb-3 sm:mb-4 relative z-10 text-xs sm:text-sm md:text-base`}>
                     <span className="relative z-10">
                       {format(new Date(moment.date), "dd 'de' MMMM 'de' yyyy", {
                         locale: ptBR,
@@ -112,12 +112,12 @@ export default function TimelineHorizontal({
                   </div>
 
                   {/* Título */}
-                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 leading-tight relative z-10 group-hover:scale-105 transition-transform duration-300 break-words">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3 leading-tight relative z-10 group-hover:scale-105 transition-transform duration-300 break-words">
                     {moment.title}
                   </h2>
 
                   {/* Descrição */}
-                  <p className="text-gray-700 leading-relaxed text-sm md:text-base mb-3 sm:mb-4 relative z-10 line-clamp-3 sm:line-clamp-4 group-hover:text-gray-900 transition-colors duration-300 break-words">
+                  <p className="text-gray-300 leading-relaxed text-sm md:text-base mb-3 sm:mb-4 relative z-10 line-clamp-3 sm:line-clamp-4 group-hover:text-gray-100 transition-colors duration-300 break-words">
                     {moment.description}
                   </p>
 
@@ -249,7 +249,7 @@ export default function TimelineHorizontal({
               onClick={() => {
                 scrollContainerRef.current?.scrollBy({ left: -500, behavior: 'smooth' })
               }}
-              className="hidden md:flex fixed left-4 top-1/2 transform -translate-y-1/2 bg-white/95 hover:bg-white text-gray-800 w-14 h-14 rounded-full items-center justify-center shadow-xl transition-all hover:scale-110 z-30 border-2 border-gray-200 backdrop-blur-sm animate-pulse"
+              className="hidden md:flex fixed left-4 top-1/2 transform -translate-y-1/2 bg-slate-800/95 hover:bg-slate-700 text-pink-300 w-14 h-14 rounded-full items-center justify-center shadow-xl transition-all hover:scale-110 z-30 border-2 border-pink-500/50 backdrop-blur-sm animate-pulse"
               style={{ top: '50%' }}
             >
               <span className="text-2xl font-bold">‹</span>
@@ -260,7 +260,7 @@ export default function TimelineHorizontal({
               onClick={() => {
                 scrollContainerRef.current?.scrollBy({ left: 500, behavior: 'smooth' })
               }}
-              className="hidden md:flex fixed right-4 top-1/2 transform -translate-y-1/2 bg-white/95 hover:bg-white text-gray-800 w-14 h-14 rounded-full items-center justify-center shadow-xl transition-all hover:scale-110 z-30 border-2 border-gray-200 backdrop-blur-sm animate-pulse"
+              className="hidden md:flex fixed right-4 top-1/2 transform -translate-y-1/2 bg-slate-800/95 hover:bg-slate-700 text-pink-300 w-14 h-14 rounded-full items-center justify-center shadow-xl transition-all hover:scale-110 z-30 border-2 border-pink-500/50 backdrop-blur-sm animate-pulse"
               style={{ top: '50%' }}
             >
               <span className="text-2xl font-bold">›</span>

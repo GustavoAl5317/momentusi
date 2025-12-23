@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Moment } from '@/types'
 import { format } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
+import { normalizeMusicUrl } from '@/lib/musicUrlHelper'
 
 interface MomentFormProps {
   onAdd: React.Dispatch<React.SetStateAction<Moment[]>>
@@ -76,7 +77,7 @@ export default function MomentForm({ onAdd }: MomentFormProps) {
         description,
         image_url: imageUrls[0] || undefined, // Mantido para compatibilidade
         image_urls: imageUrls.length > 0 ? imageUrls : undefined,
-        music_url: musicUrl || undefined,
+        music_url: musicUrl ? normalizeMusicUrl(musicUrl) : undefined,
         order_index: 0,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -131,7 +132,7 @@ export default function MomentForm({ onAdd }: MomentFormProps) {
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
-            className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+            className="w-full px-3 py-2 bg-white text-gray-900 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
           />
         </div>
         <div>
@@ -144,7 +145,7 @@ export default function MomentForm({ onAdd }: MomentFormProps) {
             onChange={(e) => setTitle(e.target.value)}
             placeholder="Ex: Nosso primeiro encontro"
             required
-            className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+            className="w-full px-3 py-2 bg-white text-gray-900 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
           />
         </div>
       </div>
@@ -159,7 +160,7 @@ export default function MomentForm({ onAdd }: MomentFormProps) {
           placeholder="Por que esse momento é especial?"
           required
           rows={3}
-          className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 resize-none"
+          className="w-full px-3 py-2 bg-white text-gray-900 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 resize-none"
         />
       </div>
 
@@ -207,15 +208,40 @@ export default function MomentForm({ onAdd }: MomentFormProps) {
 
       <div className="mb-3 sm:mb-4">
         <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-          Link de Música (Spotify ou YouTube)
+          Música (Spotify ou YouTube)
         </label>
-        <input
-          type="url"
-          value={musicUrl}
-          onChange={(e) => setMusicUrl(e.target.value)}
-          placeholder="https://open.spotify.com/track/..."
-          className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
-        />
+        <div className="space-y-2">
+          <input
+            type="text"
+            value={musicUrl}
+            onChange={(e) => setMusicUrl(e.target.value)}
+            placeholder="Cole a URL ou apenas o ID (ex: dQw4w9WgXcQ)"
+            className="w-full px-3 py-2 bg-white text-gray-900 text-sm sm:text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+          />
+          <div className="flex gap-2">
+            <a
+              href="https://www.youtube.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 px-3 py-2 bg-red-600 hover:bg-red-700 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span>▶️</span>
+              <span>Buscar no YouTube</span>
+            </a>
+            <a
+              href="https://open.spotify.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 px-3 py-2 bg-green-600 hover:bg-green-700 text-white text-xs sm:text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
+            >
+              <span>🎵</span>
+              <span>Buscar no Spotify</span>
+            </a>
+          </div>
+          <p className="text-xs text-gray-500">
+            💡 Dica: Você pode colar apenas o ID do vídeo/música (ex: dQw4w9WgXcQ) ou a URL completa
+          </p>
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
@@ -229,7 +255,7 @@ export default function MomentForm({ onAdd }: MomentFormProps) {
         <button
           type="button"
           onClick={() => setIsOpen(false)}
-          className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 border-2 border-gray-300 rounded-full hover:bg-gray-100 transition-all text-sm sm:text-base font-semibold"
+          className="w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 bg-white text-gray-900 border-2 border-gray-300 rounded-full hover:bg-gray-100 transition-all text-sm sm:text-base font-semibold"
         >
           Cancelar
         </button>

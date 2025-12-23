@@ -339,19 +339,19 @@ export default function ExplorePage() {
       : exampleTimelines.filter((t) => t.theme === selectedTheme)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
       {/* Header */}
       <div className="container mx-auto px-4 py-16 text-center relative">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-1/4 w-64 h-64 bg-pink-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
-          <div className="absolute top-0 right-1/4 w-64 h-64 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
+          <div className="absolute top-0 left-1/4 w-64 h-64 bg-blue-600/20 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+          <div className="absolute top-0 right-1/4 w-64 h-64 bg-pink-500/20 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
         </div>
 
         <div className="relative z-10">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">
             Explore Exemplos
           </h1>
-          <p className="text-xl text-gray-600 mb-12">
+          <p className="text-xl text-gray-300 mb-12">
             Veja como outras pessoas estão criando suas linhas do tempo
           </p>
 
@@ -363,8 +363,8 @@ export default function ExplorePage() {
                 onClick={() => setSelectedTheme(theme.id)}
                 className={`px-6 py-3 rounded-full font-semibold transition-all ${
                   selectedTheme === theme.id
-                    ? 'bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-lg scale-105'
-                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-pink-300 hover:scale-105'
+                    ? 'bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-lg scale-105'
+                    : 'bg-slate-800 text-gray-300 border-2 border-pink-500/30 hover:border-pink-500/50 hover:scale-105'
                 }`}
               >
                 <span className="mr-2">{theme.icon}</span>
@@ -391,16 +391,16 @@ export default function ExplorePage() {
 
         {/* CTA */}
         <div className="text-center mt-16">
-          <div className="bg-white rounded-3xl shadow-2xl p-12 max-w-2xl mx-auto border-2 border-pink-100">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+          <div className="bg-slate-800/90 backdrop-blur-sm rounded-3xl shadow-2xl p-12 max-w-2xl mx-auto border-2 border-pink-500/30">
+            <h2 className="text-3xl font-bold text-white mb-4">
               Pronto para criar a sua?
             </h2>
-            <p className="text-gray-600 mb-8">
+            <p className="text-gray-300 mb-8">
               Transforme seus momentos especiais em uma linha do tempo única
             </p>
             <Link
               href="/create"
-              className="inline-block bg-gradient-to-r from-pink-600 to-purple-600 text-white px-10 py-4 rounded-full text-lg font-semibold hover:from-pink-700 hover:to-purple-700 transition-all shadow-xl hover:shadow-2xl hover:scale-105"
+              className="inline-block bg-gradient-to-r from-pink-500 to-rose-500 text-white px-10 py-4 rounded-full text-lg font-semibold hover:from-pink-600 hover:to-rose-600 transition-all shadow-xl hover:shadow-2xl hover:scale-105"
             >
               ✨ Criar Minha Linha do Tempo
             </Link>
