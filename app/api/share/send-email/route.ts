@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
           'Authorization': `Bearer ${resendApiKey}`,
         },
         body: JSON.stringify({
-          from: process.env.RESEND_FROM_EMAIL || 'Momentusi <noreply@momentusi.app>',
+          from: process.env.RESEND_FROM_EMAIL || 'Momentusi <onboarding@resend.dev>',
           to: [to],
           subject: `📅 ${timelineTitle} - Sua Timeline Momentusi`,
           html: generateEmailHTML(timelineTitle, timelineSubtitle, timelineUrl),
