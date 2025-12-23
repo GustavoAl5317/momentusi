@@ -318,6 +318,15 @@ function SuccessPageContent() {
           <p className="text-gray-300">
             Sua linha do tempo foi publicada com sucesso.
           </p>
+          <div className="mt-4 bg-blue-900/30 border border-blue-500/50 rounded-lg p-4">
+            <p className="text-sm text-blue-200 flex items-start gap-2">
+              <span className="text-lg">📧</span>
+              <span>
+                <strong>Importante:</strong> Você também receberá um email com os links da sua timeline. 
+                <strong className="block mt-1">Verifique também a caixa de SPAM/Lixo Eletrônico</strong> caso não encontre o email na caixa de entrada.
+              </span>
+            </p>
+          </div>
         </div>
 
         <div className="space-y-4 mb-8">

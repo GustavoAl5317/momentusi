@@ -34,21 +34,30 @@ export async function sendPaymentConfirmationEmail({
     // Usar domínio de teste do Resend se não tiver email comercial
     // Domínio de teste: onboarding@resend.dev (não precisa verificar domínio)
     const fromEmail = process.env.RESEND_FROM_EMAIL || 'Momentusi <onboarding@resend.dev>'
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momentusi.vercel.app'
+    
+    // Garantir que a URL está correta (usar momentusi.com.br como padrão)
+    let siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momentusi.com.br'
+    siteUrl = siteUrl.replace(/\/$/, '') // Remover barra final se houver
+    
+    // Validar e corrigir URLs se necessário
+    const cleanPublicUrl = publicUrl.startsWith('http') ? publicUrl : `${siteUrl}/${publicUrl.replace(/^\//, '')}`
+    const cleanEditUrl = editUrl.startsWith('http') ? editUrl : `${siteUrl}/${editUrl.replace(/^\//, '')}`
+    
+    console.log('📧 URLs do email:', { cleanPublicUrl, cleanEditUrl, siteUrl, originalPublicUrl: publicUrl, originalEditUrl: editUrl })
 
     const html = generatePaymentConfirmationHTML({
       timelineTitle,
       timelineSubtitle,
-      publicUrl,
-      editUrl,
+      publicUrl: cleanPublicUrl,
+      editUrl: cleanEditUrl,
       planType,
       siteUrl,
     })
 
     const text = generatePaymentConfirmationText({
       timelineTitle,
-      publicUrl,
-      editUrl,
+      publicUrl: cleanPublicUrl,
+      editUrl: cleanEditUrl,
       planType,
     })
 
@@ -58,13 +67,21 @@ export async function sendPaymentConfirmationEmail({
         'Content-Type': 'application/json',
         Authorization: `Bearer ${resendApiKey}`,
       },
-      body: JSON.stringify({
-        from: fromEmail,
-        to: [to],
-        subject: `🎉 Pagamento Aprovado! Sua Timeline "${timelineTitle}" está pronta`,
-        html,
-        text,
-      }),
+        body: JSON.stringify({
+          from: fromEmail,
+          to: [to],
+          subject: `Pagamento Aprovado - Sua Timeline "${timelineTitle}" está pronta`,
+          html,
+          text,
+          headers: {
+            'X-Entity-Ref-ID': `payment-${Date.now()}`,
+            'List-Unsubscribe': `<mailto:gsantana.dev@hotmail.com?subject=Unsubscribe>`,
+          },
+          tags: [
+            { name: 'category', value: 'payment_confirmation' },
+            { name: 'type', value: 'transactional' },
+          ],
+        }),
     })
 
     if (!response.ok) {
@@ -164,11 +181,11 @@ function generatePaymentConfirmationHTML({
                   <p style="margin: 0 0 15px; color: #6b7280; font-size: 13px; line-height: 1.5;">
                     Use este link para compartilhar sua timeline com outras pessoas. Elas poderão ver todos os momentos que você criou.
                   </p>
-                  <a href="${publicUrl}" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px;">
+                  <a href="${publicUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #9333ea 0%, #7c3aed 100%); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; text-align: center;">
                     Abrir Timeline Pública
                   </a>
                   <p style="margin: 15px 0 0; color: #9ca3af; font-size: 12px; word-break: break-all;">
-                    ${publicUrl}
+                    <a href="${publicUrl}" style="color: #9ca3af; text-decoration: underline;">${publicUrl}</a>
                   </p>
                 </div>
                 
@@ -180,11 +197,11 @@ function generatePaymentConfirmationHTML({
                   <p style="margin: 0 0 15px; color: #6b7280; font-size: 13px; line-height: 1.5;">
                     <strong>⚠️ Guarde este link com cuidado!</strong> Use-o para editar sua timeline, adicionar ou remover momentos, mudar o tema, etc. Não compartilhe este link com outras pessoas.
                   </p>
-                  <a href="${editUrl}" style="display: inline-block; padding: 12px 24px; background-color: #f59e0b; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px;">
+                  <a href="${editUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 12px 24px; background-color: #f59e0b; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer; text-align: center;">
                     Editar Timeline
                   </a>
                   <p style="margin: 15px 0 0; color: #9ca3af; font-size: 12px; word-break: break-all;">
-                    ${editUrl}
+                    <a href="${editUrl}" style="color: #9ca3af; text-decoration: underline;">${editUrl}</a>
                   </p>
                 </div>
               </div>

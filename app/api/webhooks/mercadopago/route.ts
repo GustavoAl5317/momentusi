@@ -27,25 +27,40 @@ export async function POST(request: NextRequest) {
     let paymentId: string | undefined = undefined
     let paymentStatus: string | undefined = undefined
     
-    // Formato 1: body.data.id (webhook padrão)
+    // Formato 1: body.data.id (webhook padrão do Mercado Pago)
     if (data?.id) {
       paymentId = String(data.id)
       paymentStatus = data.status || action
     }
     // Formato 2: body.id (webhook direto)
-    else if (body.id) {
+    else if (body.id && typeof body.id === 'string') {
       paymentId = String(body.id)
       paymentStatus = body.status || action
     }
-    // Formato 3: action contém o ID (ex: "payment.updated" com ID no body)
+    // Formato 3: action contém "payment" e há ID no body
     else if (action && typeof action === 'string' && action.includes('payment')) {
       // Tentar extrair do body diretamente
-      paymentId = body.id || body.data?.id
+      paymentId = body.id ? String(body.id) : (body.data?.id ? String(body.data.id) : undefined)
       paymentStatus = body.status || action
+    }
+    // Formato 4: body pode ter estrutura diferente (tentar buscar em vários lugares)
+    else {
+      // Tentar encontrar paymentId em diferentes propriedades
+      paymentId = body.payment_id || body.paymentId || body.data?.payment_id || body.data?.paymentId
+      if (paymentId) {
+        paymentId = String(paymentId)
+        paymentStatus = body.status || body.data?.status || action
+      }
     }
 
     // Processar notificação de pagamento
-    if (type === 'payment' || action?.includes('payment') || paymentId) {
+    // Aceitar webhooks mesmo se type for undefined, desde que tenha action relacionada a payment ou paymentId
+    const isPaymentWebhook = type === 'payment' || 
+                             (action && typeof action === 'string' && action.includes('payment')) || 
+                             paymentId ||
+                             (body.data && (body.data.id || body.data.status))
+    
+    if (isPaymentWebhook) {
       console.log('Processando pagamento:', {
         paymentId,
         status: paymentStatus,
@@ -202,9 +217,15 @@ export async function POST(request: NextRequest) {
           if (emailToSend) {
             try {
               console.log('📧 Tentando enviar email para:', emailToSend)
-              const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momentusi.vercel.app'
+              // Garantir que a URL está correta e sem barras duplas
+              let siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momentusi.com.br'
+              siteUrl = siteUrl.replace(/\/$/, '') // Remover barra final se houver
+              
+              // Garantir que os links estão corretos
               const publicUrl = `${siteUrl}/${timeline.slug}`
               const editUrl = `${siteUrl}/edit?token=${timeline.edit_token}`
+              
+              console.log('📧 URLs geradas para email:', { publicUrl, editUrl, siteUrl })
               
               const { sendPaymentConfirmationEmail } = await import('@/lib/email')
               const emailResult = await sendPaymentConfirmationEmail({
@@ -269,7 +290,18 @@ export async function POST(request: NextRequest) {
         })
       }
     } else {
-      console.log('⚠️ Tipo de webhook não processado:', type)
+      // Log mais detalhado para debug
+      console.log('⚠️ Tipo de webhook não processado:', {
+        type: type || 'undefined',
+        action: action || 'undefined',
+        hasData: !!data,
+        hasPaymentId: !!paymentId,
+        bodyKeys: Object.keys(body),
+      })
+      
+      // Se não conseguiu processar mas parece ser um webhook válido, retornar sucesso
+      // para evitar reenvios infinitos
+      return NextResponse.json({ received: true, message: 'Webhook format not recognized' })
     }
 
     return NextResponse.json({ received: true })

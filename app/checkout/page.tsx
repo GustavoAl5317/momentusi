@@ -103,6 +103,15 @@ function CheckoutPageContent() {
               placeholder="seu@email.com"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white text-gray-900"
             />
+            <div className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
+              <p className="text-sm text-blue-800 flex items-start gap-2">
+                <span className="text-lg">📧</span>
+                <span>
+                  <strong>Importante:</strong> Após o pagamento ser aprovado, você receberá um email com os links da sua timeline. 
+                  <strong className="block mt-1">Verifique também a caixa de SPAM/Lixo Eletrônico</strong> caso não encontre o email na caixa de entrada.
+                </span>
+              </p>
+            </div>
           </div>
 
           {error && (

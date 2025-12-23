@@ -2,7 +2,7 @@
 
 import { Moment } from '@/types'
 import { format } from 'date-fns'
-import ptBR from 'date-fns/locale/pt-BR'
+import { ptBR } from 'date-fns/locale'
 import { useEffect, useRef, useState } from 'react'
 
 interface TimelineVerticalProps {
