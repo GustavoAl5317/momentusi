@@ -16,27 +16,65 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     
     console.log('=== WEBHOOK RECEBIDO ===')
+    console.log('Body completo:', JSON.stringify(body, null, 2))
     console.log('Tipo:', body.type)
     console.log('Action:', body.action)
     console.log('Data:', JSON.stringify(body.data, null, 2))
     
     const { type, action, data } = body
 
+    // Extrair paymentId de diferentes formatos de webhook
+    let paymentId: string | undefined = undefined
+    let paymentStatus: string | undefined = undefined
+    
+    // Formato 1: body.data.id (webhook padrão)
+    if (data?.id) {
+      paymentId = String(data.id)
+      paymentStatus = data.status || action
+    }
+    // Formato 2: body.id (webhook direto)
+    else if (body.id) {
+      paymentId = String(body.id)
+      paymentStatus = body.status || action
+    }
+    // Formato 3: action contém o ID (ex: "payment.updated" com ID no body)
+    else if (action && typeof action === 'string' && action.includes('payment')) {
+      // Tentar extrair do body diretamente
+      paymentId = body.id || body.data?.id
+      paymentStatus = body.status || action
+    }
+
     // Processar notificação de pagamento
-    if (type === 'payment') {
-      const paymentId = data?.id
-      const paymentStatus = data?.status || action
-      const externalReference = data?.external_reference // timelineId que passamos na preference
-      
+    if (type === 'payment' || action?.includes('payment') || paymentId) {
       console.log('Processando pagamento:', {
         paymentId,
         status: paymentStatus,
-        externalReference,
+        type,
+        action,
       })
 
       if (!paymentId) {
         console.error('❌ Payment ID não encontrado no webhook')
         return NextResponse.json({ received: true }) // Retornar 200 para não reenviar
+      }
+
+      // IMPORTANTE: Buscar payment na API do Mercado Pago primeiro para obter external_reference
+      let mpPaymentData = null
+      let externalReference: string | undefined = undefined
+      
+      try {
+        const mpPayment = await paymentClient.get({ id: paymentId })
+        mpPaymentData = mpPayment
+        externalReference = mpPayment.external_reference
+        paymentStatus = mpPayment.status || paymentStatus
+        console.log('✅ Payment encontrado na API do MP:', {
+          id: mpPayment.id,
+          status: mpPayment.status,
+          external_reference: mpPayment.external_reference,
+        })
+      } catch (error: any) {
+        console.warn('⚠️ Não foi possível buscar payment na API do MP:', error.message)
+        // Continuar tentando buscar no banco
       }
 
       // Buscar payment no banco usando external_reference (timelineId)
@@ -55,7 +93,7 @@ export async function POST(request: NextRequest) {
         
         if (!refError && paymentByRef) {
           payment = paymentByRef
-          console.log('Payment encontrado por external_reference:', payment.id)
+          console.log('✅ Payment encontrado por external_reference:', payment.id)
         }
       }
       
@@ -69,7 +107,21 @@ export async function POST(request: NextRequest) {
         
         if (!idError && paymentById) {
           payment = paymentById
-          console.log('Payment encontrado por mercado_pago_payment_id:', payment.id)
+          console.log('✅ Payment encontrado por mercado_pago_payment_id:', payment.id)
+        }
+      }
+      
+      // Se ainda não encontrou, tentar buscar pelo preference_id (que pode estar salvo como mercado_pago_payment_id inicialmente)
+      if (!payment && mpPaymentData?.metadata?.preference_id) {
+        const { data: paymentByPref, error: prefError } = await supabaseAdmin
+          .from('payments')
+          .select('*')
+          .eq('mercado_pago_payment_id', mpPaymentData.metadata.preference_id)
+          .maybeSingle()
+        
+        if (!prefError && paymentByPref) {
+          payment = paymentByPref
+          console.log('✅ Payment encontrado por preference_id:', payment.id)
         }
       }
 
@@ -82,20 +134,8 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({ received: true, message: 'Payment not found' })
       }
 
-      // IMPORTANTE: Buscar status real do pagamento na API do Mercado Pago
-      // Isso é necessário porque o webhook pode vir com status "pending" mesmo que o pagamento tenha sido aprovado
-      let realPaymentStatus = paymentStatus
-      let mpPaymentData = null
-      try {
-        const mpPayment = await paymentClient.get({ id: paymentId })
-        realPaymentStatus = mpPayment.status
-        mpPaymentData = mpPayment
-        console.log('Status real do pagamento na API do MP:', realPaymentStatus)
-        console.log('External reference do pagamento:', mpPayment.external_reference)
-      } catch (error: any) {
-        console.warn('⚠️ Não foi possível buscar status do pagamento na API do MP:', error.message)
-        // Continuar com o status do webhook se não conseguir buscar
-      }
+      // Usar dados já buscados da API do MP (se disponível)
+      const realPaymentStatus = mpPaymentData?.status || paymentStatus
 
       // Processar status do pagamento (usar status real da API)
       // IMPORTANTE: Para Pix, o pagamento pode vir como "pending" inicialmente
