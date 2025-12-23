@@ -1,8 +1,8 @@
-# Momenta - Documentação do Projeto
+# Momentusi - Documentação do Projeto
 
 ## 📖 Visão Geral
 
-Momenta é um SaaS B2C para criar e compartilhar linhas do tempo de momentos especiais. O produto permite que qualquer pessoa crie uma página pública compartilhável por URL, sem necessidade de login.
+Momentusi é um SaaS B2C para criar e compartilhar linhas do tempo de momentos especiais. O produto permite que qualquer pessoa crie uma página pública compartilhável por URL, sem necessidade de login.
 
 ## 🎯 Funcionalidades Implementadas
 

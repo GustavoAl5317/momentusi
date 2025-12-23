@@ -189,7 +189,7 @@ export async function POST(request: NextRequest) {
       items: [
         {
           id: timelineId, // ID único do item
-          title: `Momenta - Plano ${planType === 'essential' ? 'Essencial' : 'Completo'}`,
+          title: `Momentusi - Plano ${planType === 'essential' ? 'Essencial' : 'Completo'}`,
           description: `Linha do tempo: ${timeline.title}`.substring(0, 255), // Limitar tamanho
           quantity: 1,
           unit_price: Number(amount), // Garantir que seja número
@@ -218,7 +218,7 @@ export async function POST(request: NextRequest) {
         timeline_id: timelineId,
         plan: planType,
       },
-      statement_descriptor: 'Momenta',
+      statement_descriptor: 'Momentusi',
     }
     
     // Adicionar notification_url apenas se não for localhost

@@ -7,7 +7,7 @@ import Footer from '@/components/Footer'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Momenta - Linha do Tempo de Momentos Especiais',
+  title: 'Momentusi - Linha do Tempo de Momentos Especiais',
   description: 'Crie e compartilhe linhas do tempo de momentos importantes. Presente digital permanente.',
 }
 

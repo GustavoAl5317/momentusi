@@ -35,12 +35,12 @@ export async function generateMetadata({
 
   if (timeline.error) {
     return {
-      title: 'Timeline não encontrada - Momenta',
+      title: 'Timeline não encontrada - Momentusi',
     }
   }
 
   return {
-    title: `${timeline.title} - Momenta`,
+    title: `${timeline.title} - Momentusi`,
     description: timeline.subtitle || timeline.title,
     openGraph: {
       title: timeline.title,

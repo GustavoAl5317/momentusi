@@ -20,14 +20,14 @@ export default function TermosPage() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">1. Aceitação dos Termos</h2>
               <p>
-                Ao acessar e usar o Momenta, você concorda em cumprir e estar vinculado aos seguintes termos e condições de uso.
+                Ao acessar e usar o Momentusi, você concorda em cumprir e estar vinculado aos seguintes termos e condições de uso.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">2. Uso do Serviço</h2>
               <p>
-                O Momenta permite que você crie e compartilhe linhas do tempo de momentos especiais. Você é responsável por todo o conteúdo que criar e compartilhar.
+                O Momentusi permite que você crie e compartilhe linhas do tempo de momentos especiais. Você é responsável por todo o conteúdo que criar e compartilhar.
               </p>
             </section>
 
@@ -41,14 +41,14 @@ export default function TermosPage() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">4. Propriedade Intelectual</h2>
               <p>
-                Você mantém todos os direitos sobre o conteúdo que criar. Ao usar o Momenta, você nos concede uma licença para exibir e hospedar seu conteúdo.
+                Você mantém todos os direitos sobre o conteúdo que criar. Ao usar o Momentusi, você nos concede uma licença para exibir e hospedar seu conteúdo.
               </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">5. Limitação de Responsabilidade</h2>
               <p>
-                O Momenta não se responsabiliza por perda de dados ou conteúdo. Recomendamos manter backups de suas informações importantes.
+                O Momentusi não se responsabiliza por perda de dados ou conteúdo. Recomendamos manter backups de suas informações importantes.
               </p>
             </section>
 

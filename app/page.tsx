@@ -28,7 +28,7 @@ export default function Home() {
 
             {/* Título principal */}
             <h1 className="text-7xl md:text-8xl lg:text-9xl font-black mb-6 bg-gradient-to-r from-pink-400 via-rose-400 to-pink-400 bg-clip-text text-transparent animate-gradient leading-tight">
-              Momenta
+              Momentusi
             </h1>
             
             {/* Subtítulo */}
@@ -100,7 +100,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-20">
           <div className="text-center mb-16">
             <h2 className="text-5xl md:text-6xl font-bold text-white mb-4">
-              Por que escolher o <span className="bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">Momenta</span>?
+              Por que escolher o <span className="bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">Momentusi</span>?
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               A forma mais bonita e fácil de preservar e compartilhar seus momentos especiais
@@ -315,7 +315,7 @@ export default function Home() {
               Perguntas <span className="bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">Frequentes</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Tire suas dúvidas sobre o Momenta
+              Tire suas dúvidas sobre o Momentusi
             </p>
           </div>
 

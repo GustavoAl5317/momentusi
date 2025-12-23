@@ -1,6 +1,6 @@
-# Guia de Configuração - Momenta
+# Guia de Configuração - Momentusi
 
-Este guia irá ajudá-lo a configurar o projeto Momenta do zero.
+Este guia irá ajudá-lo a configurar o projeto Momentusi do zero.
 
 ## 📋 Pré-requisitos
 

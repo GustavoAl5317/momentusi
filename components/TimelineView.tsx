@@ -480,7 +480,7 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
               rel="noopener noreferrer"
               className="text-gray-400/60 hover:text-gray-300/80 transition-colors"
             >
-              Momenta
+              Momentusi
             </a>
           </p>
         </footer>

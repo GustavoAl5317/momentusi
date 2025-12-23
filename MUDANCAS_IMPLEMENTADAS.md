@@ -13,7 +13,7 @@
 
 ### O que foi feito:
 - Adicionada marca discreta no rodapé apenas para plano `essential`
-- Marca simples e não intrusiva: "Criado com Momenta" em texto pequeno e discreto
+- Marca simples e não intrusiva: "Criado com Momentusi" em texto pequeno e discreto
 
 ### Arquivos modificados:
 - `components/TimelineView.tsx` - Footer com marca simples

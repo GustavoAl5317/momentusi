@@ -68,7 +68,7 @@ Se no futuro você quiser usar um domínio próprio:
 2. Adicione seu domínio
 3. Configure os registros DNS conforme instruções
 4. Aguarde a verificação
-5. Configure `RESEND_FROM_EMAIL=Momenta <noreply@seu-dominio.com>`
+5. Configure `RESEND_FROM_EMAIL=Momentusi <noreply@seu-dominio.com>`
 
 **Nota:** O domínio de teste (`onboarding@resend.dev`) funciona perfeitamente em produção também!
 

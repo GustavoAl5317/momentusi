@@ -31,7 +31,7 @@ function FooterContent() {
             <div className="flex items-center gap-2 mb-4">
               <div className="text-3xl">⏱️</div>
               <h3 className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">
-                Momenta
+                Momentusi
               </h3>
             </div>
             <p className="text-gray-400 leading-relaxed text-lg">
@@ -157,7 +157,7 @@ function FooterContent() {
               </Link>
             </div>
             <div className="text-sm text-gray-500">
-              © {new Date().getFullYear()} Momenta. Todos os direitos reservados.
+              © {new Date().getFullYear()} Momentusi. Todos os direitos reservados.
             </div>
           </div>
         </div>

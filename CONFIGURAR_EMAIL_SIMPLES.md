@@ -16,7 +16,7 @@ O sistema funciona perfeitamente usando o **domínio de teste do Resend**, que n
 
 1. No dashboard do Resend, vá em **API Keys** (menu lateral)
 2. Clique em **Create API Key**
-3. Dê um nome (ex: "Momenta Production")
+3. Dê um nome (ex: "Momentusi Production")
 4. Copie a chave (ela só aparece uma vez!)
 
 ### 3. Configurar no Vercel
@@ -55,7 +55,7 @@ Se no futuro você quiser usar um domínio próprio (ex: `noreply@momentusi.com`
 1. Compre um domínio
 2. No Resend, adicione o domínio
 3. Configure os registros DNS
-4. Adicione `RESEND_FROM_EMAIL=Momenta <noreply@seu-dominio.com>` no Vercel
+4. Adicione `RESEND_FROM_EMAIL=Momentusi <noreply@seu-dominio.com>` no Vercel
 
 Mas isso é **opcional** - o domínio de teste funciona perfeitamente!
 

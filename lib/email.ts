@@ -33,7 +33,7 @@ export async function sendPaymentConfirmationEmail({
 
     // Usar domínio de teste do Resend se não tiver email comercial
     // Domínio de teste: onboarding@resend.dev (não precisa verificar domínio)
-    const fromEmail = process.env.RESEND_FROM_EMAIL || 'Momenta <onboarding@resend.dev>'
+    const fromEmail = process.env.RESEND_FROM_EMAIL || 'Momentusi <onboarding@resend.dev>'
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momentusi.vercel.app'
 
     const html = generatePaymentConfirmationHTML({
@@ -114,7 +114,7 @@ function generatePaymentConfirmationHTML({
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pagamento Aprovado - Momenta</title>
+  <title>Pagamento Aprovado - Momentusi</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f3f4f6;">
   <table role="presentation" style="width: 100%; border-collapse: collapse;">
@@ -219,7 +219,7 @@ function generatePaymentConfirmationHTML({
                   <a href="mailto:gustavo.developer@hotmail.com" style="color: #9333ea; text-decoration: none;">gustavo.developer@hotmail.com</a>
                 </p>
                 <p style="margin: 20px 0 0; color: #9ca3af; font-size: 12px;">
-                  © ${new Date().getFullYear()} Momenta. Todos os direitos reservados.
+                  © ${new Date().getFullYear()} Momentusi. Todos os direitos reservados.
                 </p>
               </div>
             </td>
@@ -274,7 +274,7 @@ ${editUrl}
 Precisa de ajuda? Entre em contato conosco:
 gustavo.developer@hotmail.com
 
-© ${new Date().getFullYear()} Momenta. Todos os direitos reservados.
+© ${new Date().getFullYear()} Momentusi. Todos os direitos reservados.
   `.trim()
 }
 

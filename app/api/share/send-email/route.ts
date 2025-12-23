@@ -33,9 +33,9 @@ export async function POST(request: NextRequest) {
           'Authorization': `Bearer ${resendApiKey}`,
         },
         body: JSON.stringify({
-          from: process.env.RESEND_FROM_EMAIL || 'Momenta <noreply@momenta.app>',
+          from: process.env.RESEND_FROM_EMAIL || 'Momentusi <noreply@momentusi.app>',
           to: [to],
-          subject: `📅 ${timelineTitle} - Sua Timeline Momenta`,
+          subject: `📅 ${timelineTitle} - Sua Timeline Momentusi`,
           html: generateEmailHTML(timelineTitle, timelineSubtitle, timelineUrl),
           text: generateEmailText(timelineTitle, timelineSubtitle, timelineUrl),
         }),
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
       // Fallback: apenas log (para desenvolvimento)
       console.log('📧 Email seria enviado:', {
         to,
-        subject: `📅 ${timelineTitle} - Sua Timeline Momenta`,
+        subject: `📅 ${timelineTitle} - Sua Timeline Momentusi`,
         timelineUrl,
       })
       
@@ -95,7 +95,7 @@ function generateEmailHTML(
       </head>
       <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #ec4899 0%, #a855f7 100%); padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
-          <h1 style="color: white; margin: 0; font-size: 28px;">📅 Momenta</h1>
+          <h1 style="color: white; margin: 0; font-size: 28px;">📅 Momentusi</h1>
         </div>
         
         <div style="background: #ffffff; padding: 40px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 10px 10px;">
@@ -125,7 +125,7 @@ function generateEmailHTML(
           <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 40px 0;">
           
           <p style="color: #9ca3af; font-size: 12px; text-align: center; margin: 0;">
-            Este email foi enviado através do Momenta.<br>
+            Este email foi enviado através do Momentusi.<br>
             Se você não esperava receber este email, pode ignorá-lo com segurança.
           </p>
         </div>
@@ -140,7 +140,7 @@ function generateEmailText(
   url: string
 ): string {
   return `
-📅 Momenta
+📅 Momentusi
 
 ${title}
 ${subtitle ? `${subtitle}\n` : ''}
@@ -150,7 +150,7 @@ Você recebeu uma timeline especial! Acesse o link abaixo para visualizar:
 ${url}
 
 ---
-Este email foi enviado através do Momenta.
+Este email foi enviado através do Momentusi.
 Se você não esperava receber este email, pode ignorá-lo com segurança.
   `.trim()
 }

@@ -50,7 +50,7 @@ Adicione as seguintes variáveis no seu `.env`:
 RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxx
 
 # Email do remetente (deve ser verificado no Resend)
-RESEND_FROM_EMAIL=Momenta <noreply@seu-dominio.com>
+RESEND_FROM_EMAIL=Momentusi <noreply@seu-dominio.com>
 ```
 
 ### 4. Verificar Domínio (Produção)
