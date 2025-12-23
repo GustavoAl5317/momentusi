@@ -44,6 +44,8 @@ html {
   min-height: 200px;
   width: 100%;
   overflow: visible;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .timeline-line {
@@ -304,6 +306,16 @@ html {
   min-height: 200px;
   margin-bottom: 2rem;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .timeline-item {
+    justify-content: flex-start;
+  }
 }
 
 .timeline-item:last-child {

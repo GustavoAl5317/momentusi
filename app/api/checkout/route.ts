@@ -176,6 +176,12 @@ export async function POST(request: NextRequest) {
 
     // Criar Preference no Mercado Pago (Checkout Pro)
     // Documentação: https://www.mercadopago.com.br/developers/pt/docs/checkout-pro/checkout-customization/preferences
+    // 
+    // IMPORTANTE: NÃO enviar payer.email na preference
+    // Enviar payer.email empurra o checkout para o fluxo "express/login/challenge"
+    // que pode travar e deixar o botão "Criar Pix" desabilitado.
+    // Deixamos o checkout rodar como "guest" para que o Mercado Pago peça
+    // os dados necessários (CPF, etc.) dentro do próprio checkout.
     
     const preferenceBody: any = {
       items: [
@@ -188,15 +194,7 @@ export async function POST(request: NextRequest) {
           currency_id: 'BRL',
         },
       ],
-      payer: {
-        email: normalizedEmail, // Email normalizado e validado
-        // Nota: O Mercado Pago pode exigir mais informações do payer em alguns casos
-        // Se o botão continuar desabilitado, pode ser necessário adicionar:
-        // name: "Nome do Cliente",
-        // surname: "Sobrenome",
-        // phone: { area_code: "11", number: "999999999" }
-        // Mas isso requer coletar esses dados no formulário
-      },
+      // NÃO incluir payer.email - deixa o checkout rodar como "guest"
       back_urls: {
         success: successUrl,
         failure: failureUrl,
@@ -235,7 +233,7 @@ export async function POST(request: NextRequest) {
         unit_price: item.unit_price,
         currency_id: item.currency_id,
       })),
-      payer: { email: email?.split('@')[1] ? '***@' + email.split('@')[1] : 'N/A' },
+      payer: 'NÃO ENVIADO (checkout como guest)',
       back_urls: {
         success: successUrl.includes('localhost') ? 'localhost' : 'produção',
         failure: failureUrl.includes('localhost') ? 'localhost' : 'produção',
@@ -252,16 +250,11 @@ export async function POST(request: NextRequest) {
     // Log detalhado da resposta para diagnóstico
     const preferenceData = preference as any
     
-    // IMPORTANTE: Verificar se o email está na resposta (pode não estar mesmo sendo enviado)
-    const payerEmailInResponse = preferenceData.payer?.email
-    const payerEmailSent = normalizedEmail
-    
     console.log('=== PREFERENCE CRIADA - DIAGNÓSTICO COMPLETO ===')
     console.log('ID:', preference.id)
     console.log('init_point:', preference.init_point ? '✅ SIM' : '❌ NÃO')
     console.log('sandbox_init_point:', preference.sandbox_init_point ? '✅ SIM' : '❌ NÃO')
-    console.log('Email ENVIADO:', payerEmailSent ? '✅ ' + payerEmailSent.split('@')[0] + '@***' : '❌ NÃO')
-    console.log('Email RETORNADO na resposta:', payerEmailInResponse ? '✅ ' + payerEmailInResponse.split('@')[0] + '@***' : '⚠️ NÃO RETORNADO (pode causar botão desabilitado)')
+    console.log('Payer:', 'NÃO ENVIADO (checkout como guest - Mercado Pago pedirá dados)')
     console.log('Items count:', preferenceData.items?.length || 0)
     console.log('Payment methods:', JSON.stringify(preferenceData.payment_methods || {}, null, 2))
     console.log('Back URLs:', {
@@ -283,23 +276,6 @@ export async function POST(request: NextRequest) {
     // Validações críticas que podem causar botão desabilitado
     if (!preference.id) {
       throw new Error('Preference não foi criada corretamente pelo Mercado Pago')
-    }
-    
-    // IMPORTANTE: O Mercado Pago pode não retornar o email na resposta mesmo que tenha sido enviado
-    // Isso é normal em alguns casos, mas pode causar o botão ficar desabilitado
-    if (!preferenceData.payer) {
-      console.error('❌ ERRO CRÍTICO: Payer não está na resposta do Mercado Pago')
-      console.error('⚠️ Isso pode causar o botão ficar desabilitado')
-      // Não lançar erro fatal aqui, pois o email foi enviado corretamente
-      // O problema pode ser do lado do Mercado Pago
-    } else if (!preferenceData.payer.email && !payerEmailSent) {
-      console.error('❌ ERRO CRÍTICO: Email do payer não foi enviado nem retornado')
-      throw new Error('Email do payer não configurado corretamente')
-    } else if (!preferenceData.payer.email && payerEmailSent) {
-      console.warn('⚠️ AVISO: Email foi enviado mas não retornado na resposta do Mercado Pago')
-      console.warn('⚠️ Isso pode causar o botão "Criar Pix" ficar desabilitado')
-      console.warn('⚠️ Possíveis causas: limitação do Mercado Pago ou configuração da conta')
-      console.warn('⚠️ Solução: Verifique a configuração da conta no Mercado Pago ou contate o suporte')
     }
     
     if (!preferenceData.back_urls || !preferenceData.back_urls.success) {

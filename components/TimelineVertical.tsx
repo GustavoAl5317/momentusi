@@ -71,7 +71,7 @@ export default function TimelineVertical({
   }, [moments])
 
   return (
-    <div ref={containerRef} className="timeline-container relative max-w-4xl mx-auto px-4">
+    <div ref={containerRef} className="timeline-container relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
       {/* Linha vertical da timeline - posicionada absolutamente para não ocupar espaço */}
       <div 
         className="timeline-line timeline-line-theme hidden md:block"
@@ -84,7 +84,7 @@ export default function TimelineVertical({
       ></div>
 
       {/* Momentos */}
-      <div className="space-y-16 md:space-y-20 relative z-10">
+      <div className="space-y-12 sm:space-y-16 md:space-y-20 relative z-10">
         {moments.map((moment, index) => (
           <div
             key={moment.id}
@@ -99,13 +99,13 @@ export default function TimelineVertical({
             ></div>
 
             {/* Card do momento */}
-            <div className={`relative w-full md:w-[calc(50%-3rem)] ${
+            <div className={`relative w-full max-w-full mx-auto md:w-[calc(50%-3rem)] ${
               index % 2 === 0 
                 ? 'md:ml-auto md:mr-0 md:pl-8' 
                 : 'md:ml-0 md:mr-auto md:pr-8'
             }`}>
               <div 
-                className={`timeline-card animate-fadeInUp cursor-pointer group relative ${theme.cardStyle || 'bg-slate-800/90 backdrop-blur-sm border-pink-500/30 shadow-xl'}`}
+                className={`timeline-card animate-fadeInUp cursor-pointer group relative w-full ${theme.cardStyle || 'bg-slate-800/90 backdrop-blur-sm border-pink-500/30 shadow-xl'}`}
                 style={{ 
                   animationDelay: `${index * 0.15}s`,
                   borderColor: theme.cardStyle ? undefined : 'rgba(236, 72, 153, 0.2)',
