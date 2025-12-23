@@ -155,8 +155,12 @@ export async function POST(request: NextRequest) {
       // Processar status do pagamento (usar status real da API)
       // IMPORTANTE: Para Pix, o pagamento pode vir como "pending" inicialmente
       // e depois mudar para "approved" quando confirmado
-      if (realPaymentStatus === 'approved' || paymentStatus === 'approved' || action === 'payment.created') {
+      // NÃO enviar email em 'payment.created' - apenas quando realmente aprovado
+      const isApproved = realPaymentStatus === 'approved' || paymentStatus === 'approved'
+      
+      if (isApproved) {
         console.log('✅ Pagamento aprovado, atualizando status...')
+        console.log('Status verificado:', { realPaymentStatus, paymentStatus, action })
         
         // Atualizar status do pagamento
         // IMPORTANTE: paymentId do webhook é o ID real do payment (não da preference)
