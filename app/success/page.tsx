@@ -13,7 +13,44 @@ function SuccessPageContent() {
   const [isLoading, setIsLoading] = useState(true)
   const [retryCount, setRetryCount] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  const [isSyncing, setIsSyncing] = useState(false)
   const maxRetries = 10 // Tentar por até ~50 segundos (10 tentativas x 5s)
+  
+  // Função para sincronizar pagamento manualmente
+  const handleSyncPayment = async () => {
+    if (!timelineId || isSyncing) return
+    
+    setIsSyncing(true)
+    try {
+      const syncResponse = await fetch(`/api/timelines/${timelineId}/sync-payment`, {
+        method: 'POST',
+      })
+      const syncData = await syncResponse.json()
+      
+      if (syncData.success && syncData.updated) {
+        // Recarregar links
+        const response = await fetch(`/api/timelines/${timelineId}/get-links`)
+        const data = await response.json()
+        
+        if (data.links?.public || data.links?.edit) {
+          setLinks(data.links)
+          setTimeline(data.timeline)
+          setPayment(data.payment)
+          setError(null)
+          setIsLoading(false)
+        } else {
+          setError('Pagamento sincronizado, mas os links ainda não estão disponíveis. Aguarde alguns instantes.')
+        }
+      } else {
+        setError('Pagamento ainda pendente. Verifique se o pagamento foi concluído no Mercado Pago.')
+      }
+    } catch (err: any) {
+      console.error('Erro ao sincronizar:', err)
+      setError('Erro ao sincronizar pagamento. Tente novamente.')
+    } finally {
+      setIsSyncing(false)
+    }
+  }
 
   useEffect(() => {
     if (!timelineId) {
@@ -59,15 +96,35 @@ function SuccessPageContent() {
             setIsLoading(false)
           }
         } else if (data.payment?.status === 'pending') {
-          // Pagamento pendente (ex: Pix)
+          // Pagamento pendente (ex: Pix) - sincronizar com Mercado Pago
           if (retryCount < maxRetries) {
             console.log(`Aguardando confirmação do pagamento... (tentativa ${retryCount + 1}/${maxRetries})`)
+            
+            // Tentar sincronizar o status do pagamento com o Mercado Pago
+            try {
+              const syncResponse = await fetch(`/api/timelines/${timelineId}/sync-payment`, {
+                method: 'POST',
+              })
+              const syncData = await syncResponse.json()
+              
+              if (syncData.success && syncData.updated) {
+                console.log('✅ Status sincronizado! Pagamento aprovado.')
+                // Recarregar links imediatamente
+                setTimeout(() => {
+                  fetchLinks()
+                }, 1000)
+                return
+              }
+            } catch (syncError) {
+              console.warn('Erro ao sincronizar pagamento:', syncError)
+            }
+            
             setRetryCount(prev => prev + 1)
             setTimeout(() => {
               fetchLinks()
             }, 5000)
           } else {
-            setError('Pagamento ainda pendente. Verifique se o pagamento foi concluído.')
+            setError('Pagamento ainda pendente. Verifique se o pagamento foi concluído e tente sincronizar manualmente.')
             setIsLoading(false)
           }
         } else {
@@ -151,14 +208,25 @@ function SuccessPageContent() {
               ? 'Não foi possível obter os links automaticamente.'
               : 'Seu pagamento pode estar sendo processado. Tente buscar seus links manualmente.'}
           </p>
-          {timelineId && (
-            <Link
-              href={`/buscar-links?timelineId=${timelineId}`}
-              className="inline-block bg-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink-700 transition-colors"
-            >
-              Buscar Links Manualmente
-            </Link>
-          )}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            {timelineId && (
+              <>
+                <button
+                  onClick={handleSyncPayment}
+                  disabled={isSyncing}
+                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSyncing ? 'Sincronizando...' : '🔄 Sincronizar Pagamento'}
+                </button>
+                <Link
+                  href={`/buscar-links?timelineId=${timelineId}`}
+                  className="inline-block bg-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink-700 transition-colors text-center"
+                >
+                  Buscar Links Manualmente
+                </Link>
+              </>
+            )}
+          </div>
         </div>
       </div>
     )

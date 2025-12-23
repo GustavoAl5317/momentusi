@@ -98,6 +98,8 @@ export async function POST(request: NextRequest) {
       }
 
       // Processar status do pagamento (usar status real da API)
+      // IMPORTANTE: Para Pix, o pagamento pode vir como "pending" inicialmente
+      // e depois mudar para "approved" quando confirmado
       if (realPaymentStatus === 'approved' || paymentStatus === 'approved' || action === 'payment.created') {
         console.log('✅ Pagamento aprovado, atualizando status...')
         
@@ -147,7 +149,23 @@ export async function POST(request: NextRequest) {
           })
         }
         
-      } else if (paymentStatus === 'rejected' || paymentStatus === 'cancelled' || paymentStatus === 'refunded') {
+      } else if (realPaymentStatus === 'pending' || paymentStatus === 'pending') {
+        // Pagamento pendente (ex: Pix aguardando confirmação)
+        console.log('⏳ Pagamento pendente (aguardando confirmação)...')
+        
+        // Atualizar apenas o mercado_pago_payment_id se ainda não estiver atualizado
+        if (payment.mercado_pago_payment_id !== paymentId) {
+          await supabaseAdmin
+            .from('payments')
+            .update({ mercado_pago_payment_id: paymentId })
+            .eq('id', payment.id)
+          console.log('✅ Payment ID atualizado (pendente)')
+        }
+        
+        // Não publicar ainda - aguardar confirmação
+        console.log('⏳ Aguardando confirmação do pagamento...')
+        
+      } else if (paymentStatus === 'rejected' || paymentStatus === 'cancelled' || paymentStatus === 'refunded' || realPaymentStatus === 'rejected' || realPaymentStatus === 'cancelled' || realPaymentStatus === 'refunded') {
         console.log('❌ Pagamento rejeitado/cancelado, atualizando status...')
         
         // Atualizar status do pagamento para failed
@@ -158,7 +176,11 @@ export async function POST(request: NextRequest) {
           
         console.log('✅ Payment marcado como failed')
       } else {
-        console.log('⚠️ Status de pagamento desconhecido:', paymentStatus)
+        console.log('⚠️ Status de pagamento desconhecido:', {
+          webhookStatus: paymentStatus,
+          realStatus: realPaymentStatus,
+          action,
+        })
       }
     } else {
       console.log('⚠️ Tipo de webhook não processado:', type)

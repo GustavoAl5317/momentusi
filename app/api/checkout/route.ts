@@ -155,9 +155,11 @@ export async function POST(request: NextRequest) {
       : `${cleanSiteUrl}/api/webhooks/mercadopago` // Enviar se for URL pública
     
     // Construir URLs de retorno (garantir que sejam strings válidas)
+    // IMPORTANTE: pendingUrl também redireciona para /success porque pagamentos Pix
+    // podem ficar pendentes e o usuário deve aguardar na página de sucesso
     const successUrl = `${cleanSiteUrl}/success?timelineId=${timelineId}`
     const failureUrl = `${cleanSiteUrl}/create?timelineId=${timelineId}`
-    const pendingUrl = `${cleanSiteUrl}/create?timelineId=${timelineId}`
+    const pendingUrl = `${cleanSiteUrl}/success?timelineId=${timelineId}&status=pending`
     
     // Validar que as URLs não estão vazias
     if (!successUrl || !failureUrl || !pendingUrl) {
@@ -210,7 +212,7 @@ export async function POST(request: NextRequest) {
         // excluded_payment_types: [{ id: "type_id" }],
       },
       binary_mode: false, // Permitir pagamentos pendentes (necessário para Pix)
-      auto_return: 'approved', // Redirecionar automaticamente quando aprovado
+      auto_return: 'all', // Redirecionar automaticamente em todos os casos (approved, pending, etc)
       external_reference: timelineId,
       metadata: {
         timeline_id: timelineId,
@@ -329,6 +331,12 @@ export async function POST(request: NextRequest) {
     console.log('Ambiente:', isMercadoPagoProduction ? 'PRODUÇÃO' : 'SANDBOX (TESTE)')
     console.log('URL selecionada:', checkoutUrl.includes('sandbox') ? 'SANDBOX' : 'PRODUÇÃO')
     console.log('URL completa:', checkoutUrl)
+    console.log('Back URLs configuradas:', {
+      success: successUrl,
+      failure: failureUrl,
+      pending: pendingUrl,
+    })
+    console.log('Auto return:', preferenceBody.auto_return)
 
     return NextResponse.json({
       preferenceId: preference.id,
