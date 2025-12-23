@@ -90,9 +90,9 @@ export default function TimelineVertical({
             key={moment.id}
             className="timeline-item relative z-10"
           >
-            {/* Marcador na linha - visível em todas as telas */}
+            {/* Marcador na linha - oculto no mobile para não ficar sobre as fotos */}
             <div 
-              className="timeline-marker z-20"
+              className="timeline-marker hidden md:block z-20"
               style={{
                 background: `linear-gradient(135deg, var(--marker-color-1), var(--marker-color-2))`,
               }}

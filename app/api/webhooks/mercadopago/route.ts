@@ -146,18 +146,29 @@ export async function POST(request: NextRequest) {
             timelineId: payment.timeline_id,
             slug: timeline.slug,
             editToken: timeline.edit_token?.substring(0, 8) + '...',
+            paymentEmail: payment.email || 'NÃO ENCONTRADO',
           })
           
+          // Buscar payment novamente para garantir que temos o email atualizado
+          const { data: updatedPayment } = await supabaseAdmin
+            .from('payments')
+            .select('email')
+            .eq('id', payment.id)
+            .single()
+          
+          const emailToSend = updatedPayment?.email || payment.email
+          
           // Enviar email de confirmação com os links
-          if (payment.email) {
+          if (emailToSend) {
             try {
+              console.log('📧 Tentando enviar email para:', emailToSend)
               const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momentusi.vercel.app'
               const publicUrl = `${siteUrl}/${timeline.slug}`
               const editUrl = `${siteUrl}/edit?token=${timeline.edit_token}`
               
               const { sendPaymentConfirmationEmail } = await import('@/lib/email')
               const emailResult = await sendPaymentConfirmationEmail({
-                to: payment.email,
+                to: emailToSend,
                 timelineTitle: timeline.title,
                 timelineSubtitle: timeline.subtitle || undefined,
                 publicUrl,
@@ -172,10 +183,15 @@ export async function POST(request: NextRequest) {
               }
             } catch (emailError: any) {
               console.error('❌ Erro ao enviar email de confirmação:', emailError)
+              console.error('Stack:', emailError?.stack)
               // Não falhar o webhook por causa do email
             }
           } else {
-            console.warn('⚠️ Email não encontrado no payment, não será enviado email de confirmação')
+            console.warn('⚠️ Email não encontrado no payment:', {
+              paymentId: payment.id,
+              updatedPaymentEmail: updatedPayment?.email,
+              originalPaymentEmail: payment.email,
+            })
           }
         }
         

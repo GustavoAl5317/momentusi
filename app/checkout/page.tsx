@@ -101,7 +101,7 @@ function CheckoutPageContent() {
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="seu@email.com"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent bg-white text-gray-900"
             />
           </div>
 
