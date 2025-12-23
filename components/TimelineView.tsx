@@ -320,11 +320,6 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
                 <span className="group-hover:rotate-12 transition-transform">🔗</span>
                 <span>Copiar URL</span>
               </span>
-              {isExample && (
-                <span className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full animate-pulse">
-                  TESTE
-                </span>
-              )}
             </button>
             {timeline.plan_type === 'complete' && (
               <button
@@ -336,11 +331,6 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
                   <span className="group-hover:scale-125 transition-transform">📱</span>
                   <span>QR Code</span>
                 </span>
-                {isExample && (
-                  <span className="absolute -top-2 -right-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full animate-pulse">
-                    TESTE
-                  </span>
-                )}
               </button>
             )}
           </div>

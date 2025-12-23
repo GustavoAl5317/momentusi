@@ -252,19 +252,24 @@ html {
 
 @media (max-width: 768px) {
   .timeline-line {
-    left: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
   }
   
   .timeline-marker {
-    left: 2rem;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
   
   .timeline-item {
-    padding-left: 3rem;
+    padding-left: 0;
   }
   
   .timeline-card {
-    margin-left: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 100%;
   }
 }
 

@@ -72,9 +72,9 @@ export default function TimelineVertical({
 
   return (
     <div ref={containerRef} className="timeline-container relative max-w-4xl mx-auto px-4 sm:px-6 md:px-8">
-      {/* Linha vertical da timeline - posicionada absolutamente para não ocupar espaço */}
+      {/* Linha vertical da timeline - visível em todas as telas */}
       <div 
-        className="timeline-line timeline-line-theme hidden md:block"
+        className="timeline-line timeline-line-theme"
         style={{
           background: `linear-gradient(to bottom, var(--line-color-1), var(--line-color-2), var(--line-color-1))`,
           zIndex: 1,
@@ -90,15 +90,15 @@ export default function TimelineVertical({
             key={moment.id}
             className="timeline-item relative z-10"
           >
-            {/* Marcador na linha */}
+            {/* Marcador na linha - visível em todas as telas */}
             <div 
-              className="timeline-marker hidden md:block z-20"
+              className="timeline-marker z-20"
               style={{
                 background: `linear-gradient(135deg, var(--marker-color-1), var(--marker-color-2))`,
               }}
             ></div>
 
-            {/* Card do momento */}
+            {/* Card do momento - centralizado no mobile */}
             <div className={`relative w-full max-w-full mx-auto md:w-[calc(50%-3rem)] ${
               index % 2 === 0 
                 ? 'md:ml-auto md:mr-0 md:pl-8' 
