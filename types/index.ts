@@ -47,6 +47,7 @@ export interface Payment {
   plan_type: PlanType
   amount: number
   status: 'pending' | 'succeeded' | 'failed'
+  email?: string
   created_at: string
   updated_at: string
 }

@@ -134,10 +134,10 @@ export async function POST(request: NextRequest) {
           console.log('✅ Timeline publicada com sucesso')
         }
 
-        // Buscar timeline para log
+        // Buscar timeline para log e envio de email
         const { data: timeline } = await supabaseAdmin
           .from('timelines')
-          .select('slug, edit_token')
+          .select('slug, edit_token, title, subtitle')
           .eq('id', payment.timeline_id)
           .single()
 
@@ -147,6 +147,36 @@ export async function POST(request: NextRequest) {
             slug: timeline.slug,
             editToken: timeline.edit_token?.substring(0, 8) + '...',
           })
+          
+          // Enviar email de confirmação com os links
+          if (payment.email) {
+            try {
+              const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://momentusi.vercel.app'
+              const publicUrl = `${siteUrl}/${timeline.slug}`
+              const editUrl = `${siteUrl}/edit?token=${timeline.edit_token}`
+              
+              const { sendPaymentConfirmationEmail } = await import('@/lib/email')
+              const emailResult = await sendPaymentConfirmationEmail({
+                to: payment.email,
+                timelineTitle: timeline.title,
+                timelineSubtitle: timeline.subtitle || undefined,
+                publicUrl,
+                editUrl,
+                planType: payment.plan_type as 'essential' | 'complete',
+              })
+              
+              if (emailResult.success) {
+                console.log('✅ Email de confirmação enviado com sucesso:', emailResult.messageId)
+              } else {
+                console.warn('⚠️ Erro ao enviar email de confirmação:', emailResult.error)
+              }
+            } catch (emailError: any) {
+              console.error('❌ Erro ao enviar email de confirmação:', emailError)
+              // Não falhar o webhook por causa do email
+            }
+          } else {
+            console.warn('⚠️ Email não encontrado no payment, não será enviado email de confirmação')
+          }
         }
         
       } else if (realPaymentStatus === 'pending' || paymentStatus === 'pending') {

@@ -306,6 +306,7 @@ export async function POST(request: NextRequest) {
       plan_type: planType,
       amount: Math.round(amount * 100), // Converter para centavos
       status: 'pending',
+      email: normalizedEmail, // Salvar email para envio posterior
     })
     
     if (paymentError) {

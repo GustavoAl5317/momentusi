@@ -2,17 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import { supabaseAdmin } from '@/lib/supabase'
 import crypto from 'crypto'
 
-// Gerar slug amigável
-function generateSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '')
-    .substring(0, 50)
-}
-
 // Gerar token secreto de edição
 function generateEditToken(): string {
   return crypto.randomBytes(32).toString('hex')
@@ -58,28 +47,6 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Gerar slug único
-    let slug = generateSlug(title)
-    let slugExists = true
-    let attempts = 0
-
-    while (slugExists && attempts < 10) {
-      const { data, error: checkError } = await supabaseAdmin
-        .from('timelines')
-        .select('id')
-        .eq('slug', slug)
-        .maybeSingle()
-
-      // Se não encontrou (sem dados), slug está disponível
-      if (!data) {
-        slugExists = false
-      } else {
-        // Slug existe, gerar novo
-        slug = `${slug}-${Date.now()}`
-        attempts++
-      }
-    }
-
     const editToken = generateEditToken()
     let passwordHash = null
 
@@ -90,9 +57,8 @@ export async function POST(request: NextRequest) {
         .digest('hex')
     }
 
-    // Criar timeline
+    // Criar timeline primeiro (sem slug ainda, será gerado após criar com o ID)
     const timelineData: any = {
-      slug,
       title,
       subtitle: subtitle || null,
       theme: theme || 'default',
@@ -113,7 +79,6 @@ export async function POST(request: NextRequest) {
     }
     
     console.log('Tentando criar timeline com dados:', {
-      slug,
       title,
       theme,
       layout,
@@ -214,6 +179,28 @@ export async function POST(request: NextRequest) {
     }
     
     console.log('Timeline criada com sucesso:', timeline.id)
+    
+    // Gerar slug baseado no ID da timeline (garante unicidade)
+    const slug = timeline.id
+    
+    // Atualizar timeline com o slug
+    const { error: slugUpdateError } = await supabaseAdmin
+      .from('timelines')
+      .update({ slug })
+      .eq('id', timeline.id)
+    
+    if (slugUpdateError) {
+      console.error('Erro ao atualizar slug:', slugUpdateError)
+      // Deletar timeline se não conseguir atualizar o slug
+      await supabaseAdmin.from('timelines').delete().eq('id', timeline.id)
+      return NextResponse.json(
+        { error: 'Erro ao gerar slug da timeline' },
+        { status: 500 }
+      )
+    }
+    
+    // Atualizar objeto timeline com o slug
+    timeline.slug = slug
 
     // Criar momentos
     const momentsData = moments.map((moment: any, index: number) => ({
