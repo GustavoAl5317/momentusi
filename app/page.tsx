@@ -217,7 +217,7 @@ export default function Home() {
               <div className="relative z-10">
                 <div className="text-center mb-8">
                   <h3 className="text-4xl font-bold mb-4">Plano Completo</h3>
-                  <div className="text-6xl font-black mb-2">R$ 39,90</div>
+                  <div className="text-6xl font-black mb-2">R$ 29,99</div>
                   <p className="text-gray-300 font-medium">Pagamento único</p>
                 </div>
                 <ul className="space-y-5 mb-10">

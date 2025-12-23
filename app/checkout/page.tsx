@@ -69,7 +69,7 @@ function CheckoutPageContent() {
   }
 
   const planName = plan === 'essential' ? 'Essencial' : 'Completo'
-  const planPrice = plan === 'essential' ? 'R$ 19,90' : 'R$ 39,90'
+  const planPrice = plan === 'essential' ? 'R$ 19,90' : 'R$ 29,99'
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">

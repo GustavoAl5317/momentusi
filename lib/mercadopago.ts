@@ -98,7 +98,7 @@ export function getTokenPrefix(): string {
 
 export const PLAN_PRICES = {
   essential: 19.90, // R$19,90
-  complete: 39.90, // R$39,90
+  complete: 29.99, // R$29,99
 } as const
 
 export type PlanType = keyof typeof PLAN_PRICES

@@ -318,7 +318,7 @@ export default function TimelineEditor({
               }`}
             >
               <div className="font-bold text-base sm:text-lg mb-1">Completo</div>
-              <div className="text-xl sm:text-2xl font-bold text-purple-600 mb-2">R$ 39,90</div>
+              <div className="text-xl sm:text-2xl font-bold text-purple-600 mb-2">R$ 29,99</div>
               <div className="text-xs sm:text-sm text-gray-300">Momentos ilimitados</div>
             </button>
           </div>
