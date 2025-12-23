@@ -23,11 +23,29 @@ function AguardandoPagamentoPageContent() {
       })
       const syncData = await syncResponse.json()
       
-      if (syncData.success && syncData.updated) {
+      if (!syncResponse.ok) {
+        setMessage(syncData.error || 'Erro ao verificar pagamento. Tente novamente.')
+        return
+      }
+      
+      // Verificar se o pagamento está aprovado (mesmo que não tenha sido atualizado agora)
+      const paymentStatus = syncData.payment?.status || syncData.payment?.mercado_pago_status
+      const isApproved = paymentStatus === 'succeeded' || paymentStatus === 'approved' || syncData.updated
+      
+      if (syncData.success && isApproved) {
         // Pagamento confirmado! Redirecionar para página de sucesso
         window.location.href = `/success?timelineId=${timelineId}`
       } else {
-        setMessage('Pagamento ainda não foi confirmado. Aguarde alguns segundos e tente novamente.')
+        // Verificar status atual do pagamento no banco
+        const linksResponse = await fetch(`/api/timelines/${timelineId}/get-links`)
+        const linksData = await linksResponse.json()
+        
+        if (linksData.payment?.status === 'succeeded') {
+          // Pagamento já está aprovado, redirecionar
+          window.location.href = `/success?timelineId=${timelineId}`
+        } else {
+          setMessage('Pagamento ainda não foi confirmado. Aguarde alguns segundos e tente novamente.')
+        }
       }
     } catch (err: any) {
       console.error('Erro ao verificar pagamento:', err)
