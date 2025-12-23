@@ -18,7 +18,16 @@ async function getTimeline(slug: string, password?: string) {
 
   if (!res.ok) {
     if (res.status === 403) {
-      return { requiresPassword: true, error: 'Senha necessária' }
+      // Tentar parsear o JSON para pegar a mensagem de erro
+      try {
+        const errorData = await res.json()
+        return { 
+          requiresPassword: true, 
+          error: errorData.error || 'Senha necessária' 
+        }
+      } catch {
+        return { requiresPassword: true, error: 'Senha necessária' }
+      }
     }
     return { error: 'Timeline não encontrada' }
   }
@@ -56,36 +65,46 @@ export default async function TimelinePage({
 }: PageProps) {
   const timeline = await getTimeline(params.slug, searchParams.password)
 
+  // Verificar se precisa de senha PRIMEIRO (antes de verificar erro)
+  if (timeline.requiresPassword) {
+    return <PasswordPrompt slug={params.slug} error={timeline.error} />
+  }
+
+  // Se tiver erro e não for requiresPassword, mostrar erro
   if (timeline.error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-slate-950">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl font-bold text-white mb-4">
             Timeline não encontrada
           </h1>
-          <p className="text-gray-600">{timeline.error}</p>
+          <p className="text-gray-400">{timeline.error}</p>
         </div>
       </div>
     )
   }
 
-  if (timeline.requiresPassword) {
-    return <PasswordPrompt slug={params.slug} />
-  }
-
   return <TimelineViewWrapper timeline={timeline} />
 }
 
-function PasswordPrompt({ slug }: { slug: string }) {
+function PasswordPrompt({ slug, error }: { slug: string; error?: string }) {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          Página Privada
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Esta linha do tempo é privada. Digite a senha para acessar.
-        </p>
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4">
+      <div className="max-w-md w-full bg-slate-800 rounded-xl shadow-2xl p-8 border-2 border-pink-500/30">
+        <div className="text-center mb-6">
+          <div className="text-5xl mb-4">🔒</div>
+          <h1 className="text-2xl font-bold text-white mb-2">
+            Página Privada
+          </h1>
+          <p className="text-gray-400">
+            Esta linha do tempo é privada. Digite a senha para acessar.
+          </p>
+        </div>
+        {error && error !== 'Senha necessária' && (
+          <div className="mb-4 p-3 bg-red-500/20 border border-red-500/50 rounded-lg">
+            <p className="text-red-400 text-sm">{error}</p>
+          </div>
+        )}
         <form
           action={`/${slug}`}
           method="get"
@@ -94,13 +113,14 @@ function PasswordPrompt({ slug }: { slug: string }) {
           <input
             type="password"
             name="password"
-            placeholder="Senha"
+            placeholder="Digite a senha"
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500"
+            autoFocus
+            className="w-full px-4 py-3 bg-slate-700 text-white border-2 border-slate-600 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors placeholder-gray-400"
           />
           <button
             type="submit"
-            className="w-full bg-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink-700 transition-colors"
+            className="w-full bg-gradient-to-r from-pink-600 to-rose-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-pink-700 hover:to-rose-700 transition-all shadow-lg hover:shadow-pink-500/50"
           >
             Acessar
           </button>

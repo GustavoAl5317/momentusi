@@ -685,7 +685,8 @@ export default function TimelineEditor({
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Senha para acesso (opcional)"
+                  placeholder="Senha para acesso (obrigatória)"
+                  required={isPrivate}
                   className="w-full mt-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent"
                 />
               )}

@@ -44,9 +44,25 @@ export async function GET(
       )
     }
 
+    // Parse image_urls se for string JSON
+    const parsedMoments = (moments || []).map((moment: any) => {
+      if (moment.image_urls) {
+        // Se for string, parsear; se já for array, usar direto
+        if (typeof moment.image_urls === 'string') {
+          try {
+            moment.image_urls = JSON.parse(moment.image_urls)
+          } catch (e) {
+            // Se falhar, tentar como array com um único item
+            moment.image_urls = [moment.image_urls]
+          }
+        }
+      }
+      return moment
+    })
+
     return NextResponse.json({
       ...timeline,
-      moments: moments || [],
+      moments: parsedMoments,
     })
   } catch (error) {
     console.error('Erro na API:', error)

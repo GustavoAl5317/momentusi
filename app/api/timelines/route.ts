@@ -47,6 +47,14 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validar senha se timeline for privada
+    if (is_private && !password) {
+      return NextResponse.json(
+        { error: 'Senha é obrigatória para timelines privadas' },
+        { status: 400 }
+      )
+    }
+
     const editToken = generateEditToken()
     let passwordHash = null
 
@@ -208,15 +216,25 @@ export async function POST(request: NextRequest) {
     timeline.slug = slug
 
     // Criar momentos
-    const momentsData = moments.map((moment: any, index: number) => ({
-      timeline_id: timeline.id,
-      date: moment.date,
-      title: moment.title,
-      description: moment.description,
-      image_url: moment.image_url || null,
-      music_url: moment.music_url || null,
-      order_index: index,
-    }))
+    const momentsData = moments.map((moment: any, index: number) => {
+      // Priorizar image_urls (array) sobre image_url (string única)
+      const imageUrls = moment.image_urls && Array.isArray(moment.image_urls) && moment.image_urls.length > 0
+        ? moment.image_urls
+        : moment.image_url
+          ? [moment.image_url]
+          : null
+      
+      return {
+        timeline_id: timeline.id,
+        date: moment.date,
+        title: moment.title,
+        description: moment.description,
+        image_url: imageUrls && imageUrls.length > 0 ? imageUrls[0] : null, // Compatibilidade
+        image_urls: imageUrls ? JSON.stringify(imageUrls) : null, // Salvar como JSON
+        music_url: moment.music_url || null,
+        order_index: index,
+      }
+    })
 
     const { error: momentsError } = await supabaseAdmin
       .from('moments')
@@ -302,16 +320,27 @@ export async function PUT(request: NextRequest) {
       )
     }
 
+    // Validar senha se timeline for privada (apenas se for nova timeline ou se estiver mudando para privada)
+    if (is_private && !password && !timeline.password_hash) {
+      return NextResponse.json(
+        { error: 'Senha é obrigatória para timelines privadas' },
+        { status: 400 }
+      )
+    }
+
     let passwordHash = timeline.password_hash
 
     if (is_private && password) {
+      // Se forneceu nova senha, atualizar
       passwordHash = crypto
         .createHash('sha256')
         .update(password)
         .digest('hex')
     } else if (!is_private) {
+      // Se desmarcou como privada, remover senha
       passwordHash = null
     }
+    // Se is_private é true mas não forneceu password, mantém a senha antiga (passwordHash já está definido acima)
 
     // Preparar dados de atualização
     const updateData: any = {
@@ -323,6 +352,9 @@ export async function PUT(request: NextRequest) {
       is_private: is_private || false,
       password_hash: passwordHash,
       final_message: final_message || null,
+      // Ao salvar rascunho, garantir que is_published seja false
+      // (só será publicado através da API /publish ou após pagamento)
+      is_published: false,
     }
     
     // Adicionar cores customizadas se fornecidas (apenas para plano completo)
@@ -351,15 +383,25 @@ export async function PUT(request: NextRequest) {
     // Deletar momentos antigos e criar novos
     await supabaseAdmin.from('moments').delete().eq('timeline_id', timeline_id)
 
-    const momentsData = moments.map((moment: any, index: number) => ({
-      timeline_id,
-      date: moment.date,
-      title: moment.title,
-      description: moment.description,
-      image_url: moment.image_url || null,
-      music_url: moment.music_url || null,
-      order_index: index,
-    }))
+    const momentsData = moments.map((moment: any, index: number) => {
+      // Priorizar image_urls (array) sobre image_url (string única)
+      const imageUrls = moment.image_urls && Array.isArray(moment.image_urls) && moment.image_urls.length > 0
+        ? moment.image_urls
+        : moment.image_url
+          ? [moment.image_url]
+          : null
+      
+      return {
+        timeline_id,
+        date: moment.date,
+        title: moment.title,
+        description: moment.description,
+        image_url: imageUrls && imageUrls.length > 0 ? imageUrls[0] : null, // Compatibilidade
+        image_urls: imageUrls ? JSON.stringify(imageUrls) : null, // Salvar como JSON
+        music_url: moment.music_url || null,
+        order_index: index,
+      }
+    })
 
     const { error: momentsError } = await supabaseAdmin
       .from('moments')
