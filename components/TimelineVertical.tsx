@@ -71,7 +71,7 @@ export default function TimelineVertical({
   }, [moments])
 
   return (
-    <div ref={containerRef} className="timeline-container relative max-w-4xl mx-auto px-4">
+    <div ref={containerRef} className="timeline-container relative max-w-4xl mx-auto px-3 sm:px-4 md:px-6">
       {/* Linha vertical da timeline - posicionada absolutamente para não ocupar espaço */}
       <div 
         className="timeline-line timeline-line-theme hidden md:block"
@@ -84,7 +84,7 @@ export default function TimelineVertical({
       ></div>
 
       {/* Momentos */}
-      <div className="space-y-16 md:space-y-20 relative z-10">
+      <div className="space-y-8 sm:space-y-12 md:space-y-20 relative z-10">
         {moments.map((moment, index) => (
           <div
             key={moment.id}
@@ -113,12 +113,13 @@ export default function TimelineVertical({
                 onClick={() => onMomentClick(moment)}
               >
                 {/* Indicador de clique */}
-                <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-700 shadow-lg">
-                  Clique para ver mais
+                <div className="absolute top-2 right-2 sm:top-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold text-gray-700 shadow-lg z-30">
+                  <span className="hidden sm:inline">Clique para ver mais</span>
+                  <span className="sm:hidden">Ver mais</span>
                 </div>
                 
                 {/* Data destacada */}
-                <div className={`timeline-date bg-gradient-to-r ${theme.dateBadge || 'from-pink-500 to-purple-500'} relative z-10 bg-size-200 animate-gradient`}>
+                <div className={`timeline-date bg-gradient-to-r ${theme.dateBadge || 'from-pink-500 to-purple-500'} relative z-10 bg-size-200 animate-gradient text-xs sm:text-sm md:text-base`}>
                   <span className="relative z-10">
                     {format(new Date(moment.date), "dd 'de' MMMM 'de' yyyy", {
                       locale: ptBR,
@@ -127,12 +128,12 @@ export default function TimelineVertical({
                 </div>
 
                 {/* Título */}
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4 leading-tight group-hover:scale-105 transition-transform duration-300 relative z-10 break-words overflow-wrap-anywhere">
+                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight group-hover:scale-105 transition-transform duration-300 relative z-10 break-words overflow-wrap-anywhere px-0">
                   {moment.title}
                 </h2>
 
                 {/* Descrição */}
-                <p className="text-gray-700 leading-relaxed text-base md:text-lg mb-6 group-hover:text-gray-900 transition-colors duration-300 relative z-10 break-words whitespace-pre-wrap overflow-wrap-anywhere">
+                <p className="text-gray-700 leading-relaxed text-sm sm:text-base md:text-lg mb-4 sm:mb-6 group-hover:text-gray-900 transition-colors duration-300 relative z-10 break-words whitespace-pre-wrap overflow-wrap-anywhere px-0">
                   {moment.description}
                 </p>
 
@@ -143,21 +144,21 @@ export default function TimelineVertical({
                   
                   if (isExample) {
                     return (
-                      <div className="mt-6 mb-6">
-                        <div className="grid grid-cols-3 gap-2">
+                      <div className="mt-4 sm:mt-6 mb-4 sm:mb-6">
+                        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                           {[0, 1, 2].map((idx) => (
                             <div 
                               key={idx} 
                               className="relative overflow-hidden rounded-lg aspect-square bg-gradient-to-br from-gray-100 to-gray-200 border-2 border-dashed border-gray-300 flex items-center justify-center"
                             >
                               <div className="text-center">
-                                <div className="text-3xl mb-1">📷</div>
+                                <div className="text-xl sm:text-3xl mb-1">📷</div>
                                 <div className="text-xs text-gray-500 font-medium">Foto {idx + 1}</div>
                               </div>
                             </div>
                           ))}
                         </div>
-                        <p className="text-sm text-gray-500 mt-2 text-center">
+                        <p className="text-xs sm:text-sm text-gray-500 mt-2 text-center">
                           Clique para ver todas as 3 fotos
                         </p>
                       </div>
@@ -167,17 +168,17 @@ export default function TimelineVertical({
                   if (images.length === 0) return null
                   
                   return (
-                    <div className="mt-6 mb-6">
+                    <div className="mt-4 sm:mt-6 mb-4 sm:mb-6">
                       {images.length === 1 ? (
-                        <div className="overflow-hidden rounded-xl">
+                        <div className="overflow-hidden rounded-lg sm:rounded-xl">
                           <img
                             src={images[0]}
                             alt={moment.title}
-                            className="w-full h-auto object-cover transition-transform duration-300 hover:scale-105"
+                            className="w-full h-auto max-h-64 sm:max-h-96 object-cover transition-transform duration-300 hover:scale-105"
                           />
                         </div>
                       ) : (
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                           {images.slice(0, 3).map((img, idx) => (
                             <div key={idx} className="relative overflow-hidden rounded-lg aspect-square">
                               <img
@@ -186,7 +187,7 @@ export default function TimelineVertical({
                                 className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
                               />
                               {idx === 2 && images.length > 3 && (
-                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-lg">
+                                <div className="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-bold text-sm sm:text-lg">
                                   +{images.length - 3}
                                 </div>
                               )}
@@ -195,7 +196,7 @@ export default function TimelineVertical({
                         </div>
                       )}
                       {images.length > 1 && (
-                        <p className="text-sm text-gray-500 mt-2 text-center">
+                        <p className="text-xs sm:text-sm text-gray-500 mt-2 text-center">
                           Clique para ver todas as {images.length} fotos
                         </p>
                       )}

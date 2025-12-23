@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Moment, PlanType } from '@/types'
 import { format } from 'date-fns'
 import ptBR from 'date-fns/locale/pt-BR'
@@ -93,13 +93,33 @@ export default function MomentList({
                 </div>
               </div>
               <p className="text-sm sm:text-base text-gray-700 mb-3 break-words whitespace-pre-wrap">{moment.description}</p>
-              {moment.image_url && (
-                <img
-                  src={moment.image_url}
-                  alt={moment.title}
-                  className="w-full max-w-md rounded-lg mb-3"
-                />
-              )}
+              {(() => {
+                const images = moment.image_urls || (moment.image_url ? [moment.image_url] : [])
+                if (images.length === 0) return null
+                
+                if (images.length === 1) {
+                  return (
+                    <img
+                      src={images[0]}
+                      alt={moment.title}
+                      className="w-full max-w-md rounded-lg mb-3"
+                    />
+                  )
+                }
+                
+                return (
+                  <div className="grid grid-cols-3 gap-2 mb-3">
+                    {images.slice(0, 3).map((img, idx) => (
+                      <img
+                        key={idx}
+                        src={img}
+                        alt={`${moment.title} - Foto ${idx + 1}`}
+                        className="w-full h-24 sm:h-32 object-cover rounded-lg"
+                      />
+                    ))}
+                  </div>
+                )
+              })()}
               {moment.music_url && (
                 <div className="text-xs sm:text-sm text-gray-600 break-all">
                   🎵 Música: <a href={moment.music_url} target="_blank" rel="noopener noreferrer" className="text-pink-600 hover:underline">{moment.music_url}</a>
@@ -126,16 +146,77 @@ function MomentEditForm({
   const [title, setTitle] = useState(moment.title)
   const [description, setDescription] = useState(moment.description)
   const [musicUrl, setMusicUrl] = useState(moment.music_url || '')
+  const [images, setImages] = useState<File[]>([])
+  const [imagePreviews, setImagePreviews] = useState<string[]>([])
+  const [isUploading, setIsUploading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Carregar imagens existentes como previews
+  useEffect(() => {
+    const existingImages = moment.image_urls || (moment.image_url ? [moment.image_url] : [])
+    setImagePreviews(existingImages)
+  }, [moment])
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files).slice(0, 3) // Limitar a 3 imagens
+      setImages(files)
+      
+      // Criar previews
+      const previews = files.map(file => URL.createObjectURL(file))
+      setImagePreviews(previews)
+    }
+  }
+
+  const removeImage = (index: number) => {
+    const newImages = images.filter((_, i) => i !== index)
+    const newPreviews = imagePreviews.filter((_, i) => i !== index)
+    setImages(newImages)
+    setImagePreviews(newPreviews)
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    onSave({
-      ...moment,
-      date,
-      title,
-      description,
-      music_url: musicUrl || undefined,
-    })
+    setIsUploading(true)
+
+    try {
+      const imageUrls: string[] = []
+
+      // Upload das novas imagens se houver
+      if (images.length > 0) {
+        for (const image of images) {
+          const formData = new FormData()
+          formData.append('image', image)
+
+          const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          })
+
+          if (uploadResponse.ok) {
+            const uploadData = await uploadResponse.json()
+            imageUrls.push(uploadData.url)
+          }
+        }
+      } else {
+        // Se não há novas imagens, manter as existentes
+        imageUrls.push(...(moment.image_urls || (moment.image_url ? [moment.image_url] : [])))
+      }
+
+      onSave({
+        ...moment,
+        date,
+        title,
+        description,
+        music_url: musicUrl || undefined,
+        image_url: imageUrls[0] || undefined, // Compatibilidade
+        image_urls: imageUrls.length > 0 ? imageUrls : undefined,
+      })
+    } catch (error) {
+      console.error('Erro ao salvar:', error)
+      alert('Erro ao salvar momento')
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   return (
@@ -189,12 +270,51 @@ function MomentEditForm({
           className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 rounded-lg"
         />
       </div>
+      <div>
+        <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+          Imagens (opcional - até 3)
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={handleImageChange}
+          disabled={images.length >= 3}
+          className="w-full px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 disabled:opacity-50 disabled:cursor-not-allowed"
+        />
+        {imagePreviews.length > 0 && (
+          <div className="mt-2 space-y-2">
+            <p className="text-xs sm:text-sm text-gray-600">
+              {imagePreviews.length} {imagePreviews.length === 1 ? 'imagem' : 'imagens'}
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              {imagePreviews.map((preview, index) => (
+                <div key={index} className="relative group">
+                  <img
+                    src={preview}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-24 sm:h-32 object-cover rounded-lg border-2 border-gray-200"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
       <div className="flex flex-col sm:flex-row gap-2 sm:gap-2">
         <button
           type="submit"
-          className="w-full sm:w-auto bg-pink-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-sm sm:text-base hover:bg-pink-700 transition-colors"
+          disabled={isUploading}
+          className="w-full sm:w-auto bg-pink-600 text-white px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg text-sm sm:text-base hover:bg-pink-700 transition-colors disabled:opacity-50"
         >
-          Salvar
+          {isUploading ? 'Salvando...' : 'Salvar'}
         </button>
         <button
           type="button"

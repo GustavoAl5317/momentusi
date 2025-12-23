@@ -25,7 +25,8 @@ export interface Moment {
   date: string
   title: string
   description: string
-  image_url?: string
+  image_url?: string // Mantido para compatibilidade com dados antigos
+  image_urls?: string[] // Array de URLs de imagens (até 3)
   music_url?: string
   order_index: number
   created_at: string

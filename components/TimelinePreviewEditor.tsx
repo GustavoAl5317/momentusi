@@ -115,6 +115,11 @@ export default function TimelinePreviewEditor({
   const themeVars = themeStyles[theme as keyof typeof themeStyles] || themeStyles.default
 
   const getMomentImages = (moment: Moment): string[] => {
+    // Priorizar image_urls (múltiplas imagens)
+    if (moment.image_urls && moment.image_urls.length > 0) {
+      return moment.image_urls
+    }
+    // Fallback para image_url (compatibilidade com dados antigos)
     if (moment.image_url) {
       return [moment.image_url]
     }

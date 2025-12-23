@@ -40,10 +40,16 @@ html {
 /* Estilos para a timeline - Design Real de Linha do Tempo */
 .timeline-container {
   position: relative;
-  padding: 2rem 0;
+  padding: 1rem 0;
   min-height: 200px;
   width: 100%;
   overflow: visible;
+}
+
+@media (min-width: 640px) {
+  .timeline-container {
+    padding: 2rem 0;
+  }
 }
 
 .timeline-line {
@@ -178,8 +184,8 @@ html {
 .timeline-card {
   position: relative;
   background: white;
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 1rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border: 1px solid rgba(236, 72, 153, 0.1);
@@ -191,6 +197,14 @@ html {
   width: 100%;
   box-sizing: border-box;
   max-width: 100%;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .timeline-card {
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
 }
 
 .timeline-card * {
@@ -268,16 +282,25 @@ html {
   background: linear-gradient(135deg, #ec4899, #a855f7);
   background-size: 200% 200%;
   color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 16px;
+  font-size: 0.75rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   box-shadow: 0 4px 6px rgba(236, 72, 153, 0.3);
   transition: all 0.3s ease;
   animation: float 3s ease-in-out infinite, dateGradient 4s ease infinite;
   position: relative;
   overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .timeline-date {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .timeline-date::before {

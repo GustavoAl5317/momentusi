@@ -75,13 +75,13 @@ export default function TimelineHorizontal({
         `}</style>
 
         {/* Container interno com os momentos */}
-        <div className="flex gap-12 md:gap-24 px-8 md:px-16" style={{ minWidth: 'max-content' }}>
+        <div className="flex gap-6 sm:gap-12 md:gap-24 px-4 sm:px-8 md:px-16" style={{ minWidth: 'max-content' }}>
           {moments.map((moment, index) => {
             const isActive = index === activeIndex
             return (
               <div
                 key={moment.id}
-                className="flex-shrink-0 w-[75vw] md:w-[450px] transition-all duration-500"
+                className="flex-shrink-0 w-[85vw] sm:w-[75vw] md:w-[450px] transition-all duration-500"
                 style={{
                   transform: isActive ? 'scale(1)' : 'scale(0.95)',
                   opacity: isActive ? 1 : 0.7,
@@ -97,12 +97,13 @@ export default function TimelineHorizontal({
                   onClick={() => onMomentClick(moment)}
                 >
                   {/* Indicador de clique */}
-                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold text-gray-700 shadow-lg z-10">
-                    Clique para ver mais
+                  <div className="absolute top-2 right-2 sm:top-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-white/90 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold text-gray-700 shadow-lg z-10">
+                    <span className="hidden sm:inline">Clique para ver mais</span>
+                    <span className="sm:hidden">Ver mais</span>
                   </div>
                   
                   {/* Data destacada */}
-                  <div className={`timeline-date bg-gradient-to-r ${theme.dateBadge} mb-4 relative z-10`}>
+                  <div className={`timeline-date bg-gradient-to-r ${theme.dateBadge} mb-3 sm:mb-4 relative z-10 text-xs sm:text-sm md:text-base`}>
                     <span className="relative z-10">
                       {format(new Date(moment.date), "dd 'de' MMMM 'de' yyyy", {
                         locale: ptBR,
@@ -111,12 +112,12 @@ export default function TimelineHorizontal({
                   </div>
 
                   {/* Título */}
-                  <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 leading-tight relative z-10 group-hover:scale-105 transition-transform duration-300">
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2 sm:mb-3 leading-tight relative z-10 group-hover:scale-105 transition-transform duration-300 break-words">
                     {moment.title}
                   </h2>
 
                   {/* Descrição */}
-                  <p className="text-gray-700 leading-relaxed text-sm md:text-base mb-4 relative z-10 line-clamp-4 group-hover:text-gray-900 transition-colors duration-300">
+                  <p className="text-gray-700 leading-relaxed text-sm md:text-base mb-3 sm:mb-4 relative z-10 line-clamp-3 sm:line-clamp-4 group-hover:text-gray-900 transition-colors duration-300 break-words">
                     {moment.description}
                   </p>
 

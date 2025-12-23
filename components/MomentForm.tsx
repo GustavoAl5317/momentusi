@@ -14,14 +14,27 @@ export default function MomentForm({ onAdd }: MomentFormProps) {
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'))
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [image, setImage] = useState<File | null>(null)
+  const [images, setImages] = useState<File[]>([])
+  const [imagePreviews, setImagePreviews] = useState<string[]>([])
   const [musicUrl, setMusicUrl] = useState('')
   const [isUploading, setIsUploading] = useState(false)
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0])
+    if (e.target.files) {
+      const files = Array.from(e.target.files).slice(0, 3) // Limitar a 3 imagens
+      setImages(files)
+      
+      // Criar previews
+      const previews = files.map(file => URL.createObjectURL(file))
+      setImagePreviews(previews)
     }
+  }
+
+  const removeImage = (index: number) => {
+    const newImages = images.filter((_, i) => i !== index)
+    const newPreviews = imagePreviews.filter((_, i) => i !== index)
+    setImages(newImages)
+    setImagePreviews(newPreviews)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,21 +48,23 @@ export default function MomentForm({ onAdd }: MomentFormProps) {
     setIsUploading(true)
 
     try {
-      let imageUrl = ''
+      const imageUrls: string[] = []
 
-      // Upload da imagem se houver
-      if (image) {
-        const formData = new FormData()
-        formData.append('image', image)
+      // Upload das imagens se houver
+      if (images.length > 0) {
+        for (const image of images) {
+          const formData = new FormData()
+          formData.append('image', image)
 
-        const uploadResponse = await fetch('/api/upload', {
-          method: 'POST',
-          body: formData,
-        })
+          const uploadResponse = await fetch('/api/upload', {
+            method: 'POST',
+            body: formData,
+          })
 
-        if (uploadResponse.ok) {
-          const uploadData = await uploadResponse.json()
-          imageUrl = uploadData.url
+          if (uploadResponse.ok) {
+            const uploadData = await uploadResponse.json()
+            imageUrls.push(uploadData.url)
+          }
         }
       }
 
@@ -59,7 +74,8 @@ export default function MomentForm({ onAdd }: MomentFormProps) {
         date,
         title,
         description,
-        image_url: imageUrl || undefined,
+        image_url: imageUrls[0] || undefined, // Mantido para compatibilidade
+        image_urls: imageUrls.length > 0 ? imageUrls : undefined,
         music_url: musicUrl || undefined,
         order_index: 0,
         created_at: new Date().toISOString(),
@@ -74,7 +90,10 @@ export default function MomentForm({ onAdd }: MomentFormProps) {
       setDate(format(new Date(), 'yyyy-MM-dd'))
       setTitle('')
       setDescription('')
-      setImage(null)
+      setImages([])
+      setImagePreviews([])
+      // Limpar URLs de preview
+      imagePreviews.forEach(preview => URL.revokeObjectURL(preview))
       setMusicUrl('')
       setIsOpen(false)
     } catch (error) {
@@ -146,18 +165,43 @@ export default function MomentForm({ onAdd }: MomentFormProps) {
 
       <div className="mb-3 sm:mb-4">
         <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-          Imagem (opcional)
+          Imagens (opcional - até 3)
         </label>
         <input
           type="file"
           accept="image/*"
+          multiple
           onChange={handleImageChange}
-          className="w-full px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100"
+          disabled={images.length >= 3}
+          className="w-full px-3 py-2 text-xs sm:text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs sm:file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100 disabled:opacity-50 disabled:cursor-not-allowed"
         />
-        {image && (
-          <p className="text-xs sm:text-sm text-gray-600 mt-1">
-            {image.name} ({(image.size / 1024 / 1024).toFixed(2)} MB)
-          </p>
+        {images.length > 0 && (
+          <div className="mt-2 space-y-2">
+            <p className="text-xs sm:text-sm text-gray-600">
+              {images.length} de 3 imagens selecionadas
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              {imagePreviews.map((preview, index) => (
+                <div key={index} className="relative group">
+                  <img
+                    src={preview}
+                    alt={`Preview ${index + 1}`}
+                    className="w-full h-24 sm:h-32 object-cover rounded-lg border-2 border-gray-200"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeImage(index)}
+                    className="absolute top-1 right-1 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600 transition-colors opacity-0 group-hover:opacity-100"
+                  >
+                    ×
+                  </button>
+                  <p className="text-xs text-gray-500 mt-1 truncate">
+                    {(images[index].size / 1024 / 1024).toFixed(2)} MB
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
 
