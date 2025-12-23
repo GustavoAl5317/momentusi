@@ -55,7 +55,7 @@ export default function PrivacidadePage() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">6. Contato</h2>
               <p>
-                Para questões sobre privacidade, entre em contato através do email: <a href="mailto:gustavo.developer@hotmail.com" className="text-pink-400 hover:underline">gustavo.developer@hotmail.com</a>
+                Para questões sobre privacidade, entre em contato através do email: <a href="mailto:gsantana.dev@hotmail.com" className="text-pink-400 hover:underline">gsantana.dev@hotmail.com</a>
               </p>
             </section>
           </div>

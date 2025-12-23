@@ -39,14 +39,14 @@ function FooterContent() {
             </p>
             <div className="flex gap-4 pt-2">
               <a
-                href="mailto:gustavo.developer@hotmail.com"
+                href="mailto:gsantana.dev@hotmail.com"
                 className="w-10 h-10 bg-slate-800 hover:bg-pink-500 rounded-full flex items-center justify-center transition-all hover:scale-110"
                 aria-label="Email"
               >
                 <span className="text-lg">📧</span>
               </a>
               <a
-                href="https://instagram.com"
+                href="https://instagram.com/oguuuusta"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-slate-800 hover:bg-pink-500 rounded-full flex items-center justify-center transition-all hover:scale-110"
@@ -106,7 +106,7 @@ function FooterContent() {
             <ul className="space-y-4">
               <li>
                 <a
-                  href="mailto:gustavo.developer@hotmail.com"
+                  href="mailto:gsantana.dev@hotmail.com"
                   className="text-gray-400 hover:text-pink-400 transition-colors flex items-center gap-3 group"
                 >
                   <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center group-hover:bg-pink-500 transition-colors">
@@ -114,13 +114,13 @@ function FooterContent() {
                   </div>
                   <div>
                     <div className="text-xs text-gray-500 mb-0.5">Email</div>
-                    <div className="text-sm">gustavo.developer@hotmail.com</div>
+                    <div className="text-sm">gsantana.dev@hotmail.com</div>
                   </div>
                 </a>
               </li>
               <li>
                 <a
-                  href="https://instagram.com"
+                  href="https://instagram.com/oguuuusta"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-pink-400 transition-colors flex items-center gap-3 group"
@@ -130,7 +130,7 @@ function FooterContent() {
                   </div>
                   <div>
                     <div className="text-xs text-gray-500 mb-0.5">Instagram</div>
-                    <div className="text-sm">@momenta</div>
+                    <div className="text-sm">@oguuuusta</div>
                   </div>
                 </a>
               </li>
@@ -157,7 +157,7 @@ function FooterContent() {
               </Link>
             </div>
             <div className="text-sm text-gray-500">
-              © {new Date().getFullYear()} Momentusi. Todos os direitos reservados.
+              © {new Date().getFullYear()} Momentusi. Todos os direitos reservados. <span className="text-gray-600">by Gustavo dev</span>
             </div>
           </div>
         </div>

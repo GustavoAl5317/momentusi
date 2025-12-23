@@ -216,7 +216,7 @@ function generatePaymentConfirmationHTML({
                   Precisa de ajuda? Entre em contato conosco:
                 </p>
                 <p style="margin: 0; color: #9333ea; font-size: 14px;">
-                  <a href="mailto:gustavo.developer@hotmail.com" style="color: #9333ea; text-decoration: none;">gustavo.developer@hotmail.com</a>
+                  <a href="mailto:gsantana.dev@hotmail.com" style="color: #9333ea; text-decoration: none;">gsantana.dev@hotmail.com</a>
                 </p>
                 <p style="margin: 20px 0 0; color: #9ca3af; font-size: 12px;">
                   © ${new Date().getFullYear()} Momentusi. Todos os direitos reservados.
@@ -272,7 +272,7 @@ ${editUrl}
 • Privacidade: Se configurou senha, apenas quem tiver a senha poderá acessar sua timeline.
 
 Precisa de ajuda? Entre em contato conosco:
-gustavo.developer@hotmail.com
+gsantana.dev@hotmail.com
 
 © ${new Date().getFullYear()} Momentusi. Todos os direitos reservados.
   `.trim()
