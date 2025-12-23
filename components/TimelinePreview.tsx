@@ -4,6 +4,13 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
+// Helper para parsear data sem problemas de timezone
+// Converte string "YYYY-MM-DD" para Date no timezone local
+const parseLocalDate = (dateString: string): Date => {
+  const [year, month, day] = dateString.split('-').map(Number)
+  return new Date(year, month - 1, day) // month é 0-indexed no Date
+}
+
 interface TimelinePreviewProps {
   timeline: {
     id: string
@@ -89,7 +96,7 @@ export default function TimelinePreview({ timeline }: TimelinePreviewProps) {
               <div className={`w-3 h-3 rounded-full bg-pink-500 flex-shrink-0 mt-1`}></div>
               <div className="flex-1">
                 <div className="text-xs text-gray-400 mb-1">
-                  {format(new Date(moment.date), "dd 'de' MMMM 'de' yyyy", {
+                  {format(parseLocalDate(moment.date), "dd 'de' MMMM 'de' yyyy", {
                     locale: ptBR,
                   })}
                 </div>

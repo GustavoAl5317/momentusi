@@ -22,6 +22,13 @@ const createGlowShadow = (color: string): string => {
   )}, inset 0 0 20px ${hexToRgba(color, 0.1)}`
 }
 
+// Helper para parsear data sem problemas de timezone
+// Converte string "YYYY-MM-DD" para Date no timezone local
+const parseLocalDate = (dateString: string): Date => {
+  const [year, month, day] = dateString.split('-').map(Number)
+  return new Date(year, month - 1, day) // month é 0-indexed no Date
+}
+
 interface TimelineHorizontalProps {
   moments: Moment[]
   theme: any
@@ -262,7 +269,7 @@ export default function TimelineHorizontal({
                     }
                   >
                     <span className="relative z-10">
-                      {format(new Date(moment.date), "dd 'de' MMMM 'de' yyyy", {
+                      {format(parseLocalDate(moment.date), "dd 'de' MMMM 'de' yyyy", {
                         locale: ptBR,
                       })}
                     </span>

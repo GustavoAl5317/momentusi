@@ -3,8 +3,15 @@
 import { useState, useEffect } from 'react'
 import { Moment, PlanType } from '@/types'
 import { format } from 'date-fns'
-import ptBR from 'date-fns/locale/pt-BR'
+import { ptBR } from 'date-fns/locale'
 import { normalizeMusicUrl } from '@/lib/musicUrlHelper'
+
+// Helper para parsear data sem problemas de timezone
+// Converte string "YYYY-MM-DD" para Date no timezone local
+const parseLocalDate = (dateString: string): Date => {
+  const [year, month, day] = dateString.split('-').map(Number)
+  return new Date(year, month - 1, day) // month é 0-indexed no Date
+}
 
 interface MomentListProps {
   moments: Moment[]
@@ -70,7 +77,7 @@ export default function MomentList({
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-0 mb-3 sm:mb-2">
                 <div className="flex-1">
                   <div className="text-xs sm:text-sm text-gray-500 mb-1">
-                    {format(new Date(moment.date), "dd 'de' MMMM 'de' yyyy", {
+                    {format(parseLocalDate(moment.date), "dd 'de' MMMM 'de' yyyy", {
                       locale: ptBR,
                     })}
                   </div>

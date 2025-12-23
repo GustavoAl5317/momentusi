@@ -3,7 +3,14 @@
 import { useState, useEffect, useRef } from 'react'
 import { Moment } from '@/types'
 import { format } from 'date-fns'
-import ptBR from 'date-fns/locale/pt-BR'
+import { ptBR } from 'date-fns/locale'
+
+// Helper para parsear data sem problemas de timezone
+// Converte string "YYYY-MM-DD" para Date no timezone local
+const parseLocalDate = (dateString: string): Date => {
+  const [year, month, day] = dateString.split('-').map(Number)
+  return new Date(year, month - 1, day) // month é 0-indexed no Date
+}
 
 interface MomentModalProps {
   moment: Moment
@@ -86,7 +93,7 @@ export default function MomentModal({
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between z-10">
           <div>
             <div className={`inline-block ${theme.dateBadge} text-white px-4 py-2 rounded-full text-sm font-semibold mb-2`}>
-              {format(new Date(moment.date), "dd 'de' MMMM 'de' yyyy", {
+              {format(parseLocalDate(moment.date), "dd 'de' MMMM 'de' yyyy", {
                 locale: ptBR,
               })}
             </div>
