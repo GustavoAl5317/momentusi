@@ -73,6 +73,58 @@ function SuccessPageContent() {
           return
         }
 
+        // Se pagamento foi aprovado mas timeline não está publicada, tentar publicar
+        if (data.payment?.status === 'succeeded' && !data.timeline?.is_published) {
+          console.log('⚠️ Pagamento aprovado mas timeline não publicada. Tentando publicar...')
+          
+          // Tentar sincronizar e publicar
+          try {
+            const syncResponse = await fetch(`/api/timelines/${timelineId}/sync-payment`, {
+              method: 'POST',
+            })
+            const syncData = await syncResponse.json()
+            
+            if (syncData.success && syncData.updated) {
+              console.log('✅ Timeline publicada após sincronização!')
+              // Recarregar links imediatamente
+              setTimeout(() => {
+                fetchLinks()
+              }, 1000)
+              return
+            }
+            
+            // Se sincronização não funcionou, tentar publicar diretamente
+            const publishResponse = await fetch(`/api/timelines/${timelineId}/publish`, {
+              method: 'POST',
+            })
+            
+            if (publishResponse.ok) {
+              console.log('✅ Timeline publicada diretamente!')
+              // Recarregar links imediatamente
+              setTimeout(() => {
+                fetchLinks()
+              }, 1000)
+              return
+            }
+          } catch (publishError) {
+            console.warn('Erro ao tentar publicar:', publishError)
+          }
+          
+          // Se não conseguiu publicar, aguardar webhook
+          if (retryCount < maxRetries) {
+            console.log(`Aguardando publicação... (tentativa ${retryCount + 1}/${maxRetries})`)
+            setRetryCount(prev => prev + 1)
+            setTimeout(() => {
+              fetchLinks()
+            }, 5000)
+            return
+          } else {
+            setError('Pagamento aprovado, mas a publicação está demorando. Use o botão "Publicar Timeline" abaixo.')
+            setIsLoading(false)
+            return
+          }
+        }
+        
         // Se tem links, sucesso!
         if (data.links?.public || data.links?.edit) {
           setLinks(data.links)
@@ -154,24 +206,24 @@ function SuccessPageContent() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 flex items-center justify-center px-4">
         <div className="text-center max-w-md">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+          <h2 className="text-xl font-semibold text-white mb-2">
             Processando pagamento...
           </h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-300 mb-4">
             Aguardando confirmação do pagamento e publicação da timeline.
           </p>
           {retryCount > 0 && (
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-400">
               Tentativa {retryCount}/{maxRetries}...
             </p>
           )}
           <div className="mt-6">
             <Link
               href={`/buscar-links?timelineId=${timelineId}`}
-              className="text-pink-600 hover:text-pink-700 text-sm underline"
+              className="text-pink-400 hover:text-pink-300 text-sm underline"
             >
               Ou busque seus links manualmente →
             </Link>
@@ -183,8 +235,8 @@ function SuccessPageContent() {
 
   if (error || !links) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 flex items-center justify-center px-4">
+        <div className="max-w-md w-full bg-slate-800 rounded-lg shadow-lg p-8 text-center">
           <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg
               className="w-8 h-8 text-yellow-600"
@@ -200,10 +252,10 @@ function SuccessPageContent() {
               />
             </svg>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl font-bold text-white mb-4">
             {error || 'Links não disponíveis ainda'}
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-300 mb-6">
             {error 
               ? 'Não foi possível obter os links automaticamente.'
               : 'Seu pagamento pode estar sendo processado. Tente buscar seus links manualmente.'}
@@ -218,6 +270,12 @@ function SuccessPageContent() {
                 >
                   {isSyncing ? 'Sincronizando...' : '🔄 Sincronizar Pagamento'}
                 </button>
+                <Link
+                  href={`/publicar-timeline?timelineId=${timelineId}`}
+                  className="inline-block bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors text-center"
+                >
+                  📢 Publicar Timeline
+                </Link>
                 <Link
                   href={`/buscar-links?timelineId=${timelineId}`}
                   className="inline-block bg-pink-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-pink-700 transition-colors text-center"
@@ -236,8 +294,8 @@ function SuccessPageContent() {
   const editUrl = links.edit
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 flex items-center justify-center px-4">
-      <div className="max-w-2xl w-full bg-white rounded-lg shadow-lg p-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 flex items-center justify-center px-4">
+      <div className="max-w-2xl w-full bg-slate-800 rounded-lg shadow-lg p-8">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg
@@ -254,18 +312,18 @@ function SuccessPageContent() {
               />
             </svg>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-white mb-2">
             Pagamento Aprovado!
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-300">
             Sua linha do tempo foi publicada com sucesso.
           </p>
         </div>
 
         <div className="space-y-4 mb-8">
           {timelineUrl && (
-            <div className="bg-pink-50 border border-pink-200 rounded-lg p-4">
-              <h2 className="font-semibold text-gray-900 mb-2">
+            <div className="bg-slate-700 border border-pink-500/30 rounded-lg p-4">
+              <h2 className="font-semibold text-white mb-2">
                 🌐 Link da Página Pública:
               </h2>
               <div className="flex items-center gap-2">
@@ -273,7 +331,7 @@ function SuccessPageContent() {
                   type="text"
                   value={timelineUrl}
                   readOnly
-                  className="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-mono"
+                  className="flex-1 px-3 py-2 bg-slate-900 border border-gray-600 rounded-lg text-sm font-mono text-white"
                 />
                 <button
                   onClick={() => {
@@ -288,7 +346,7 @@ function SuccessPageContent() {
               <Link
                 href={timelineUrl}
                 target="_blank"
-                className="text-pink-600 hover:text-pink-700 text-sm mt-2 inline-block"
+                className="text-pink-400 hover:text-pink-300 text-sm mt-2 inline-block"
               >
                 👁️ Ver página pública →
               </Link>
@@ -296,8 +354,8 @@ function SuccessPageContent() {
           )}
 
           {editUrl && (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <h2 className="font-semibold text-gray-900 mb-2">
+            <div className="bg-slate-700 border border-blue-500/30 rounded-lg p-4">
+              <h2 className="font-semibold text-white mb-2">
                 ✏️ Link de Edição (Guarde este link!):
               </h2>
               <div className="flex items-center gap-2">
@@ -305,7 +363,7 @@ function SuccessPageContent() {
                   type="text"
                   value={editUrl}
                   readOnly
-                  className="flex-1 px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm font-mono"
+                  className="flex-1 px-3 py-2 bg-slate-900 border border-gray-600 rounded-lg text-sm font-mono text-white"
                 />
                 <button
                   onClick={() => {
@@ -317,15 +375,15 @@ function SuccessPageContent() {
                   Copiar
                 </button>
               </div>
-              <p className="text-xs text-gray-600 mt-2">
+              <p className="text-xs text-gray-300 mt-2">
                 ⚠️ Este link permite editar sua linha do tempo. Guarde-o com segurança!
               </p>
             </div>
           )}
 
           {!timelineUrl && !editUrl && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <p className="text-sm text-yellow-800">
+            <div className="bg-yellow-900/30 border border-yellow-500/30 rounded-lg p-4">
+              <p className="text-sm text-yellow-200">
                 ⏳ Os links ainda não estão disponíveis. Aguarde alguns instantes e tente novamente.
               </p>
             </div>
@@ -353,7 +411,7 @@ function SuccessPageContent() {
           <div className="mt-4 text-center">
             <Link
               href={`/buscar-links?timelineId=${timelineId}`}
-              className="text-sm text-gray-500 hover:text-gray-700 underline"
+              className="text-sm text-gray-400 hover:text-gray-300 underline"
             >
               Não recebeu os links? Busque manualmente aqui
             </Link>
@@ -367,10 +425,10 @@ function SuccessPageContent() {
 export default function SuccessPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-950 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Carregando...</p>
+          <p className="mt-4 text-gray-300">Carregando...</p>
         </div>
       </div>
     }>

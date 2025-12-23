@@ -155,11 +155,11 @@ export async function POST(request: NextRequest) {
       : `${cleanSiteUrl}/api/webhooks/mercadopago` // Enviar se for URL pública
     
     // Construir URLs de retorno (garantir que sejam strings válidas)
-    // IMPORTANTE: pendingUrl também redireciona para /success porque pagamentos Pix
-    // podem ficar pendentes e o usuário deve aguardar na página de sucesso
+    // IMPORTANTE: pendingUrl redireciona para /aguardando-pagamento para que o usuário
+    // possa verificar manualmente se o pagamento foi confirmado
     const successUrl = `${cleanSiteUrl}/success?timelineId=${timelineId}`
     const failureUrl = `${cleanSiteUrl}/create?timelineId=${timelineId}`
-    const pendingUrl = `${cleanSiteUrl}/success?timelineId=${timelineId}&status=pending`
+    const pendingUrl = `${cleanSiteUrl}/aguardando-pagamento?timelineId=${timelineId}`
     
     // Validar que as URLs não estão vazias
     if (!successUrl || !failureUrl || !pendingUrl) {

@@ -35,6 +35,8 @@ export async function GET(
       .maybeSingle()
 
     // Gerar links
+    // Retornar link público se tiver slug (mesmo que não esteja publicada ainda)
+    // A página de sucesso vai verificar se está publicada e tentar publicar se necessário
     const publicUrl = timeline.slug 
       ? `${cleanSiteUrl}/${timeline.slug}`
       : null

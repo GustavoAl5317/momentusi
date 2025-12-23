@@ -7,7 +7,7 @@ interface PageProps {
 }
 
 async function getTimeline(slug: string, password?: string) {
-  const url = new URL(`/api/moments/${slug}`, process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000')
+  const url = new URL(`/api/timeline/${slug}`, process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000')
   if (password) {
     url.searchParams.set('password', password)
   }
