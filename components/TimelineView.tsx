@@ -204,34 +204,62 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
     },
   }
 
+  // Processar cores customizadas se existirem
+  let customColors: any = null
+  if (timeline.theme === 'custom' && timeline.custom_colors) {
+    try {
+      customColors = typeof timeline.custom_colors === 'string' 
+        ? JSON.parse(timeline.custom_colors) 
+        : timeline.custom_colors
+    } catch (e) {
+      console.warn('Erro ao processar cores customizadas:', e)
+    }
+  }
+
   const theme = themeClasses[timeline.theme as keyof typeof themeClasses] || themeClasses.default
 
   // Aplicar variáveis CSS dinâmicas para o tema
-  const themeVars = {
-    '--line-color-1': timeline.theme === 'romantic' ? 'rgba(236, 72, 153, 0.8)' :
-                      timeline.theme === 'elegant' ? 'rgba(100, 116, 139, 0.8)' :
-                      timeline.theme === 'vintage' ? 'rgba(251, 146, 60, 0.8)' :
-                      timeline.theme === 'modern' ? 'rgba(14, 165, 233, 0.8)' :
-                      'rgba(147, 51, 234, 0.8)',
-    '--line-color-2': timeline.theme === 'romantic' ? 'rgba(244, 63, 94, 0.8)' :
-                      timeline.theme === 'elegant' ? 'rgba(71, 85, 105, 0.8)' :
-                      timeline.theme === 'vintage' ? 'rgba(217, 119, 6, 0.8)' :
-                      timeline.theme === 'modern' ? 'rgba(6, 182, 212, 0.8)' :
-                      'rgba(99, 102, 241, 0.8)',
-    '--marker-color-1': timeline.theme === 'romantic' ? '#ec4899' :
-                        timeline.theme === 'elegant' ? '#64748b' :
-                        timeline.theme === 'vintage' ? '#fb923c' :
-                        timeline.theme === 'modern' ? '#0ea5e9' :
-                        '#9333ea',
-    '--marker-color-2': timeline.theme === 'romantic' ? '#f43f5e' :
-                        timeline.theme === 'elegant' ? '#475569' :
-                        timeline.theme === 'vintage' ? '#d97706' :
-                        timeline.theme === 'modern' ? '#06b6d4' :
-                        '#6366f1',
-  } as React.CSSProperties
+  // Se tiver cores customizadas, usar elas; senão, usar cores do tema
+  const themeVars: React.CSSProperties = {
+    '--line-color-1': customColors?.primary 
+      ? `${customColors.primary}CC` // Adiciona transparência
+      : (timeline.theme === 'romantic' ? 'rgba(236, 72, 153, 0.8)' :
+         timeline.theme === 'elegant' ? 'rgba(100, 116, 139, 0.8)' :
+         timeline.theme === 'vintage' ? 'rgba(251, 146, 60, 0.8)' :
+         timeline.theme === 'modern' ? 'rgba(14, 165, 233, 0.8)' :
+         'rgba(147, 51, 234, 0.8)'),
+    '--line-color-2': customColors?.secondary 
+      ? `${customColors.secondary}CC`
+      : (timeline.theme === 'romantic' ? 'rgba(244, 63, 94, 0.8)' :
+         timeline.theme === 'elegant' ? 'rgba(71, 85, 105, 0.8)' :
+         timeline.theme === 'vintage' ? 'rgba(217, 119, 6, 0.8)' :
+         timeline.theme === 'modern' ? 'rgba(6, 182, 212, 0.8)' :
+         'rgba(99, 102, 241, 0.8)'),
+    '--marker-color-1': customColors?.primary || 
+      (timeline.theme === 'romantic' ? '#ec4899' :
+       timeline.theme === 'elegant' ? '#64748b' :
+       timeline.theme === 'vintage' ? '#fb923c' :
+       timeline.theme === 'modern' ? '#0ea5e9' :
+       '#9333ea'),
+    '--marker-color-2': customColors?.secondary ||
+      (timeline.theme === 'romantic' ? '#f43f5e' :
+       timeline.theme === 'elegant' ? '#475569' :
+       timeline.theme === 'vintage' ? '#d97706' :
+       timeline.theme === 'modern' ? '#06b6d4' :
+       '#6366f1'),
+  }
+  
+  // Se tiver cores customizadas, aplicar no estilo inline
+  const customStyle: React.CSSProperties = customColors ? {
+    backgroundColor: customColors.background || undefined,
+    color: customColors.text || undefined,
+  } : {}
 
   return (
-    <div className={`min-h-screen ${theme.bg}`} style={themeVars}>
+    <div 
+      className={`min-h-screen ${customColors ? '' : theme.bg}`} 
+      style={{ ...themeVars, ...customStyle }}
+    >
       {/* Header */}
       <div className="container mx-auto px-4 py-16 md:py-20 text-center relative">
         {/* Decoração de fundo com partículas e ondas */}
@@ -376,14 +404,14 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
           {timeline.layout === 'horizontal' ? (
             <TimelineHorizontal
               moments={timeline.moments}
-              theme={theme}
+              theme={{ ...theme, customColors }}
               onMomentClick={handleMomentClick}
               getMomentImages={getMomentImages}
             />
           ) : (
             <TimelineVertical
               moments={timeline.moments}
-              theme={theme}
+              theme={{ ...theme, customColors }}
               onMomentClick={handleMomentClick}
               getMomentImages={getMomentImages}
             />
@@ -440,14 +468,16 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
         />
       )}
 
-      {/* Footer */}
+      {/* Marca simples apenas no plano básico */}
       {timeline.plan_type === 'essential' && (
-        <footer className={`container mx-auto px-4 py-8 text-center text-sm ${theme.text} opacity-60`}>
-          <p>
+        <footer className="container mx-auto px-4 py-4 text-center">
+          <p className="text-xs text-gray-500/50">
             Criado com{' '}
             <a
-              href="/"
-              className="text-pink-600 hover:text-pink-700 font-semibold"
+              href="https://momentusi.vercel.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-400/60 hover:text-gray-300/80 transition-colors"
             >
               Momenta
             </a>

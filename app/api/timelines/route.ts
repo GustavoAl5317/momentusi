@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
       final_message,
       is_private,
       password,
+      custom_colors,
     } = body
 
     if (!title || !moments || moments.length === 0) {
@@ -90,7 +91,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Criar timeline
-    const timelineData = {
+    const timelineData: any = {
       slug,
       title,
       subtitle: subtitle || null,
@@ -102,6 +103,13 @@ export async function POST(request: NextRequest) {
       password_hash: passwordHash,
       edit_token: editToken,
       final_message: final_message || null,
+    }
+    
+    // Adicionar cores customizadas se fornecidas (apenas para plano completo)
+    if (custom_colors && plan_type === 'complete') {
+      timelineData.custom_colors = typeof custom_colors === 'string' 
+        ? custom_colors 
+        : JSON.stringify(custom_colors)
     }
     
     console.log('Tentando criar timeline com dados:', {
@@ -269,6 +277,7 @@ export async function PUT(request: NextRequest) {
       final_message,
       is_private,
       password,
+      custom_colors,
     } = body
 
     if (!timeline_id || !edit_token) {
@@ -312,19 +321,32 @@ export async function PUT(request: NextRequest) {
       passwordHash = null
     }
 
+    // Preparar dados de atualização
+    const updateData: any = {
+      title,
+      subtitle: subtitle || null,
+      theme: theme || 'default',
+      layout: layout || 'vertical',
+      plan_type: plan_type || timeline.plan_type,
+      is_private: is_private || false,
+      password_hash: passwordHash,
+      final_message: final_message || null,
+    }
+    
+    // Adicionar cores customizadas se fornecidas (apenas para plano completo)
+    if (custom_colors && plan_type === 'complete') {
+      updateData.custom_colors = typeof custom_colors === 'string' 
+        ? custom_colors 
+        : JSON.stringify(custom_colors)
+    } else if (theme !== 'custom') {
+      // Se mudou de custom para outro tema, remover cores customizadas
+      updateData.custom_colors = null
+    }
+    
     // Atualizar timeline
     const { error: updateError } = await supabaseAdmin
       .from('timelines')
-      .update({
-        title,
-        subtitle: subtitle || null,
-        theme: theme || 'default',
-        layout: layout || 'vertical',
-        plan_type: plan_type || timeline.plan_type,
-        is_private: is_private || false,
-        password_hash: passwordHash,
-        final_message: final_message || null,
-      })
+      .update(updateData)
       .eq('id', timeline_id)
 
     if (updateError) {

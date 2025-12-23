@@ -109,6 +109,7 @@ export default function TimelineVertical({
                 style={{ 
                   animationDelay: `${index * 0.15}s`,
                   borderColor: theme.cardStyle ? undefined : 'rgba(236, 72, 153, 0.2)',
+                  backgroundColor: theme.customColors?.card || undefined,
                 } as React.CSSProperties}
                 onClick={() => onMomentClick(moment)}
               >

@@ -1,8 +1,21 @@
 'use client'
 
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Suspense } from 'react'
 
-export default function Footer() {
+function FooterContent() {
+  const pathname = usePathname()
+  
+  // Rotas conhecidas que devem ter footer
+  const knownRoutes = ['/', '/create', '/edit', '/checkout', '/success', '/buscar-links', '/explore', '/termos', '/privacidade', '/aguardando-pagamento', '/publicar-timeline']
+  const isTimelinePage = pathname && !knownRoutes.includes(pathname) && !pathname.startsWith('/api')
+  
+  // Não renderizar footer em páginas públicas de timeline
+  if (isTimelinePage) {
+    return null
+  }
+  
   return (
     <footer className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-t border-pink-500/30 text-gray-300 relative overflow-hidden">
       {/* Decoração de fundo */}
@@ -150,6 +163,14 @@ export default function Footer() {
         </div>
       </div>
     </footer>
+  )
+}
+
+export default function Footer() {
+  return (
+    <Suspense fallback={null}>
+      <FooterContent />
+    </Suspense>
   )
 }
 

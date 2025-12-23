@@ -32,6 +32,15 @@ export default function TimelineEditor({
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(!!timelineId)
   const [showPreview, setShowPreview] = useState(false)
+  
+  // Cores customizadas (apenas para plano completo)
+  const [customColors, setCustomColors] = useState({
+    primary: '#9333ea', // roxo padrão
+    secondary: '#ec4899', // rosa padrão
+    background: '#0f172a', // slate-950
+    text: '#f1f5f9', // slate-100
+    card: '#1e293b', // slate-800
+  })
 
   const maxMoments = plan === 'essential' ? 10 : Infinity
   const canAddMore = moments.length < maxMoments
@@ -91,6 +100,8 @@ export default function TimelineEditor({
         password: password || undefined,
         timeline_id: timelineId,
         edit_token: editToken,
+        // Incluir cores customizadas apenas se for plano completo e não tiver tema selecionado
+        custom_colors: (plan === 'complete' && theme === 'custom') ? customColors : undefined,
       }
 
       const response = await fetch('/api/timelines', {
@@ -150,6 +161,8 @@ export default function TimelineEditor({
           final_message: finalMessage,
           is_private: isPrivate,
           password: password || undefined,
+          // Incluir cores customizadas apenas se for plano completo e tema customizado
+          custom_colors: (plan === 'complete' && theme === 'custom') ? customColors : undefined,
         }
 
         const response = await fetch('/api/timelines', {
@@ -421,9 +434,118 @@ export default function TimelineEditor({
                   selected={theme === 'modern'}
                   onClick={() => setTheme('modern')}
                 />
+                <ThemeOption
+                  value="custom"
+                  name="Personalizado"
+                  icon="🎨"
+                  colors={['from-purple-500', 'to-pink-500']}
+                  selected={theme === 'custom'}
+                  onClick={() => setTheme('custom')}
+                />
               </>
             )}
           </div>
+          
+          {/* Seletor de cores customizadas (apenas para plano completo e tema customizado) */}
+          {plan === 'complete' && theme === 'custom' && (
+            <div className="mt-6 p-4 bg-slate-700/50 rounded-lg border border-pink-500/30">
+              <label className="block text-sm font-semibold text-white mb-4">
+                🎨 Personalize suas Cores
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs text-gray-300 mb-2">Cor Principal</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={customColors.primary}
+                      onChange={(e) => setCustomColors({ ...customColors, primary: e.target.value })}
+                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-600"
+                    />
+                    <input
+                      type="text"
+                      value={customColors.primary}
+                      onChange={(e) => setCustomColors({ ...customColors, primary: e.target.value })}
+                      className="flex-1 px-2 py-1 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      placeholder="#9333ea"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-300 mb-2">Cor Secundária</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={customColors.secondary}
+                      onChange={(e) => setCustomColors({ ...customColors, secondary: e.target.value })}
+                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-600"
+                    />
+                    <input
+                      type="text"
+                      value={customColors.secondary}
+                      onChange={(e) => setCustomColors({ ...customColors, secondary: e.target.value })}
+                      className="flex-1 px-2 py-1 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      placeholder="#ec4899"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-300 mb-2">Fundo</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={customColors.background}
+                      onChange={(e) => setCustomColors({ ...customColors, background: e.target.value })}
+                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-600"
+                    />
+                    <input
+                      type="text"
+                      value={customColors.background}
+                      onChange={(e) => setCustomColors({ ...customColors, background: e.target.value })}
+                      className="flex-1 px-2 py-1 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      placeholder="#0f172a"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-300 mb-2">Texto</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={customColors.text}
+                      onChange={(e) => setCustomColors({ ...customColors, text: e.target.value })}
+                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-600"
+                    />
+                    <input
+                      type="text"
+                      value={customColors.text}
+                      onChange={(e) => setCustomColors({ ...customColors, text: e.target.value })}
+                      className="flex-1 px-2 py-1 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      placeholder="#f1f5f9"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs text-gray-300 mb-2">Cards</label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="color"
+                      value={customColors.card}
+                      onChange={(e) => setCustomColors({ ...customColors, card: e.target.value })}
+                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-600"
+                    />
+                    <input
+                      type="text"
+                      value={customColors.card}
+                      onChange={(e) => setCustomColors({ ...customColors, card: e.target.value })}
+                      className="flex-1 px-2 py-1 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      placeholder="#1e293b"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Momentos */}

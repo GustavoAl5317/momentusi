@@ -8,6 +8,15 @@ function HeaderContent() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
+  // Rotas conhecidas que devem ter header
+  const knownRoutes = ['/', '/create', '/edit', '/checkout', '/success', '/buscar-links', '/explore', '/termos', '/privacidade', '/aguardando-pagamento', '/publicar-timeline']
+  const isTimelinePage = pathname && !knownRoutes.includes(pathname) && !pathname.startsWith('/api')
+  
+  // Não renderizar header em páginas públicas de timeline
+  if (isTimelinePage) {
+    return null
+  }
+
   const navItems = [
     { href: '/', label: 'Início' },
     { href: '/#precos', label: 'Preços' },

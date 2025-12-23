@@ -15,6 +15,13 @@ export interface Timeline {
   password_hash?: string
   edit_token: string
   final_message?: string
+  custom_colors?: {
+    primary?: string
+    secondary?: string
+    background?: string
+    text?: string
+    card?: string
+  } | string // Pode ser string (JSON) ou objeto
   created_at: string
   updated_at: string
 }

@@ -89,10 +89,11 @@ export default function TimelineHorizontal({
               >
                 {/* Card do momento */}
                 <div 
-                  className="timeline-card animate-fadeInUp cursor-pointer group relative h-full transition-all duration-300 hover:shadow-2xl cascade-item animate-glow" 
+                  className={`timeline-card animate-fadeInUp cursor-pointer group relative h-full transition-all duration-300 hover:shadow-2xl cascade-item animate-glow ${theme.cardStyle || 'bg-slate-800/90 backdrop-blur-sm border-pink-500/30 shadow-xl'}`}
                   style={{ 
                     animationDelay: `${index * 0.1}s`,
                     '--cascade-delay': `${index * 0.1}s`,
+                    backgroundColor: theme.customColors?.card || undefined,
                   } as React.CSSProperties}
                   onClick={() => onMomentClick(moment)}
                 >
