@@ -57,8 +57,13 @@ export async function POST(request: NextRequest) {
         .digest('hex')
     }
 
-    // Criar timeline primeiro (sem slug ainda, será gerado após criar com o ID)
+    // Gerar UUID temporário para usar como slug inicial
+    // Será atualizado com o ID real após a criação
+    const tempSlug = crypto.randomUUID()
+
+    // Criar timeline com slug temporário (será atualizado com o ID real depois)
     const timelineData: any = {
+      slug: tempSlug, // Slug temporário para satisfazer a constraint NOT NULL
       title,
       subtitle: subtitle || null,
       theme: theme || 'default',
