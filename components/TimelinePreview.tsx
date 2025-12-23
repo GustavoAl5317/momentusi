@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { format } from 'date-fns'
-import ptBR from 'date-fns/locale/pt-BR'
+import { ptBR } from 'date-fns/locale/pt-BR'
 
 interface TimelinePreviewProps {
   timeline: {
@@ -21,34 +21,34 @@ interface TimelinePreviewProps {
 
 const themeStyles = {
   default: {
-    bg: 'bg-indigo-900',
-    border: 'border-2 border-indigo-600',
-    accent: 'text-purple-300',
-    button: 'bg-purple-600 hover:bg-purple-700',
+    bg: 'bg-slate-800',
+    border: 'border-2 border-blue-400/60 glow-blue',
+    accent: 'text-blue-300',
+    button: 'bg-blue-600 hover:bg-blue-500 shadow-lg shadow-blue-500/50',
   },
   romantic: {
     bg: 'bg-rose-800',
-    border: 'border-2 border-rose-500',
-    accent: 'text-pink-300',
-    button: 'bg-pink-600 hover:bg-pink-700',
+    border: 'border-2 border-rose-400/60 glow-rose',
+    accent: 'text-rose-300',
+    button: 'bg-rose-600 hover:bg-rose-500 shadow-lg shadow-rose-500/50',
   },
   elegant: {
-    bg: 'bg-slate-700',
-    border: 'border-2 border-slate-500',
-    accent: 'text-gray-300',
-    button: 'bg-gray-700 hover:bg-gray-800',
+    bg: 'bg-slate-800',
+    border: 'border-2 border-amber-400/60 glow-amber',
+    accent: 'text-amber-300',
+    button: 'bg-amber-600 hover:bg-amber-500 shadow-lg shadow-amber-500/50',
   },
   vintage: {
     bg: 'bg-amber-800',
-    border: 'border-2 border-amber-500',
+    border: 'border-2 border-orange-400/60 glow-orange',
     accent: 'text-orange-300',
-    button: 'bg-orange-600 hover:bg-orange-700',
+    button: 'bg-orange-600 hover:bg-orange-500 shadow-lg shadow-orange-500/50',
   },
   modern: {
-    bg: 'bg-cyan-900',
-    border: 'border-2 border-cyan-500',
-    accent: 'text-sky-300',
-    button: 'bg-sky-600 hover:bg-sky-700',
+    bg: 'bg-slate-800',
+    border: 'border-2 border-emerald-400/60 glow-emerald',
+    accent: 'text-emerald-300',
+    button: 'bg-emerald-600 hover:bg-emerald-500 shadow-lg shadow-emerald-500/50',
   },
 }
 

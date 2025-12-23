@@ -35,11 +35,15 @@ export default function TimelineEditor({
   
   // Cores customizadas (apenas para plano completo)
   const [customColors, setCustomColors] = useState({
-    primary: '#9333ea', // roxo padrão
-    secondary: '#ec4899', // rosa padrão
-    background: '#0f172a', // slate-950
-    text: '#f1f5f9', // slate-100
-    card: '#1e293b', // slate-800
+    primary: '#9333ea', // roxo padrão - linha e marcadores
+    secondary: '#ec4899', // rosa padrão - linha secundária
+    background: '#0f172a', // slate-950 - fundo
+    text: '#f1f5f9', // slate-100 - texto geral
+    card: '#1e293b', // slate-800 - fundo dos cards
+    title: '#ffffff', // branco - cor do título
+    border: '#9333ea', // roxo - cor da borda dos cards
+    button: '#9333ea', // roxo - cor dos botões
+    badge: '#9333ea', // roxo - cor do badge de data
   })
 
   const maxMoments = plan === 'essential' ? 10 : Infinity
@@ -275,6 +279,7 @@ export default function TimelineEditor({
             moments={moments}
             plan={plan}
             finalMessage={finalMessage}
+            customColors={plan === 'complete' && theme === 'custom' ? customColors : undefined}
           />
         </div>
       ) : (
@@ -448,98 +453,170 @@ export default function TimelineEditor({
           
           {/* Seletor de cores customizadas (apenas para plano completo e tema customizado) */}
           {plan === 'complete' && theme === 'custom' && (
-            <div className="mt-6 p-4 bg-slate-700/50 rounded-lg border border-pink-500/30">
-              <label className="block text-sm font-semibold text-white mb-4">
+            <div className="mt-6 p-3 sm:p-4 bg-slate-700/50 rounded-lg border border-pink-500/30">
+              <label className="block text-sm font-semibold text-white mb-3 sm:mb-4">
                 🎨 Personalize suas Cores
               </label>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs text-gray-300 mb-2">Cor Principal</label>
-                  <div className="flex items-center gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+                <div className="space-y-2">
+                  <label className="block text-xs text-gray-300">Cor Principal (Linha)</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                     <input
                       type="color"
                       value={customColors.primary}
                       onChange={(e) => setCustomColors({ ...customColors, primary: e.target.value })}
-                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-600"
+                      className="w-full sm:w-16 h-12 sm:h-12 rounded cursor-pointer border-2 border-gray-600"
                     />
                     <input
                       type="text"
                       value={customColors.primary}
                       onChange={(e) => setCustomColors({ ...customColors, primary: e.target.value })}
-                      className="flex-1 px-2 py-1 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      className="flex-1 w-full sm:w-auto px-2 py-2 bg-slate-800 text-white text-xs rounded border border-gray-600"
                       placeholder="#9333ea"
                     />
                   </div>
                 </div>
-                <div>
-                  <label className="block text-xs text-gray-300 mb-2">Cor Secundária</label>
-                  <div className="flex items-center gap-2">
+                <div className="space-y-2">
+                  <label className="block text-xs text-gray-300">Cor Secundária</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                     <input
                       type="color"
                       value={customColors.secondary}
                       onChange={(e) => setCustomColors({ ...customColors, secondary: e.target.value })}
-                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-600"
+                      className="w-full sm:w-16 h-12 sm:h-12 rounded cursor-pointer border-2 border-gray-600"
                     />
                     <input
                       type="text"
                       value={customColors.secondary}
                       onChange={(e) => setCustomColors({ ...customColors, secondary: e.target.value })}
-                      className="flex-1 px-2 py-1 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      className="flex-1 w-full sm:w-auto px-2 py-2 bg-slate-800 text-white text-xs rounded border border-gray-600"
                       placeholder="#ec4899"
                     />
                   </div>
                 </div>
-                <div>
-                  <label className="block text-xs text-gray-300 mb-2">Fundo</label>
-                  <div className="flex items-center gap-2">
+                <div className="space-y-2">
+                  <label className="block text-xs text-gray-300">Fundo</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                     <input
                       type="color"
                       value={customColors.background}
                       onChange={(e) => setCustomColors({ ...customColors, background: e.target.value })}
-                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-600"
+                      className="w-full sm:w-16 h-12 sm:h-12 rounded cursor-pointer border-2 border-gray-600"
                     />
                     <input
                       type="text"
                       value={customColors.background}
                       onChange={(e) => setCustomColors({ ...customColors, background: e.target.value })}
-                      className="flex-1 px-2 py-1 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      className="flex-1 w-full sm:w-auto px-2 py-2 bg-slate-800 text-white text-xs rounded border border-gray-600"
                       placeholder="#0f172a"
                     />
                   </div>
                 </div>
-                <div>
-                  <label className="block text-xs text-gray-300 mb-2">Texto</label>
-                  <div className="flex items-center gap-2">
+                <div className="space-y-2">
+                  <label className="block text-xs text-gray-300">Texto</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                     <input
                       type="color"
                       value={customColors.text}
                       onChange={(e) => setCustomColors({ ...customColors, text: e.target.value })}
-                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-600"
+                      className="w-full sm:w-16 h-12 sm:h-12 rounded cursor-pointer border-2 border-gray-600"
                     />
                     <input
                       type="text"
                       value={customColors.text}
                       onChange={(e) => setCustomColors({ ...customColors, text: e.target.value })}
-                      className="flex-1 px-2 py-1 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      className="flex-1 w-full sm:w-auto px-2 py-2 bg-slate-800 text-white text-xs rounded border border-gray-600"
                       placeholder="#f1f5f9"
                     />
                   </div>
                 </div>
-                <div>
-                  <label className="block text-xs text-gray-300 mb-2">Cards</label>
-                  <div className="flex items-center gap-2">
+                <div className="space-y-2">
+                  <label className="block text-xs text-gray-300">Cards</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                     <input
                       type="color"
                       value={customColors.card}
                       onChange={(e) => setCustomColors({ ...customColors, card: e.target.value })}
-                      className="w-12 h-12 rounded cursor-pointer border-2 border-gray-600"
+                      className="w-full sm:w-16 h-12 sm:h-12 rounded cursor-pointer border-2 border-gray-600"
                     />
                     <input
                       type="text"
                       value={customColors.card}
                       onChange={(e) => setCustomColors({ ...customColors, card: e.target.value })}
-                      className="flex-1 px-2 py-1 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      className="flex-1 w-full sm:w-auto px-2 py-2 bg-slate-800 text-white text-xs rounded border border-gray-600"
                       placeholder="#1e293b"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-xs text-gray-300">Título</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                    <input
+                      type="color"
+                      value={customColors.title}
+                      onChange={(e) => setCustomColors({ ...customColors, title: e.target.value })}
+                      className="w-full sm:w-16 h-12 sm:h-12 rounded cursor-pointer border-2 border-gray-600"
+                    />
+                    <input
+                      type="text"
+                      value={customColors.title}
+                      onChange={(e) => setCustomColors({ ...customColors, title: e.target.value })}
+                      className="flex-1 w-full sm:w-auto px-2 py-2 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      placeholder="#ffffff"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-xs text-gray-300">Borda (Neon)</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                    <input
+                      type="color"
+                      value={customColors.border}
+                      onChange={(e) => setCustomColors({ ...customColors, border: e.target.value })}
+                      className="w-full sm:w-16 h-12 sm:h-12 rounded cursor-pointer border-2 border-gray-600"
+                    />
+                    <input
+                      type="text"
+                      value={customColors.border}
+                      onChange={(e) => setCustomColors({ ...customColors, border: e.target.value })}
+                      className="flex-1 w-full sm:w-auto px-2 py-2 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      placeholder="#9333ea"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-xs text-gray-300">Botões</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                    <input
+                      type="color"
+                      value={customColors.button}
+                      onChange={(e) => setCustomColors({ ...customColors, button: e.target.value })}
+                      className="w-full sm:w-16 h-12 sm:h-12 rounded cursor-pointer border-2 border-gray-600"
+                    />
+                    <input
+                      type="text"
+                      value={customColors.button}
+                      onChange={(e) => setCustomColors({ ...customColors, button: e.target.value })}
+                      className="flex-1 w-full sm:w-auto px-2 py-2 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      placeholder="#9333ea"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <label className="block text-xs text-gray-300">Badge Data</label>
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
+                    <input
+                      type="color"
+                      value={customColors.badge}
+                      onChange={(e) => setCustomColors({ ...customColors, badge: e.target.value })}
+                      className="w-full sm:w-16 h-12 sm:h-12 rounded cursor-pointer border-2 border-gray-600"
+                    />
+                    <input
+                      type="text"
+                      value={customColors.badge}
+                      onChange={(e) => setCustomColors({ ...customColors, badge: e.target.value })}
+                      className="flex-1 w-full sm:w-auto px-2 py-2 bg-slate-800 text-white text-xs rounded border border-gray-600"
+                      placeholder="#9333ea"
                     />
                   </div>
                 </div>

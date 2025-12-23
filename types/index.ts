@@ -21,6 +21,10 @@ export interface Timeline {
     background?: string
     text?: string
     card?: string
+    title?: string
+    border?: string
+    button?: string
+    badge?: string
   } | string // Pode ser string (JSON) ou objeto
   created_at: string
   updated_at: string

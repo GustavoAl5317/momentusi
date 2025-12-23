@@ -914,4 +914,305 @@ html {
     0 0 30px rgba(236, 72, 153, 0.1);
 }
 
+/* Efeitos de brilho (glow) nas bordas dos cards */
+.glow-blue {
+  box-shadow: 
+    0 0 20px rgba(59, 130, 246, 0.3),
+    0 0 40px rgba(59, 130, 246, 0.15),
+    inset 0 0 20px rgba(59, 130, 246, 0.1);
+  animation: glowPulseBlue 3s ease-in-out infinite;
+}
+
+.glow-rose {
+  box-shadow: 
+    0 0 20px rgba(251, 113, 133, 0.3),
+    0 0 40px rgba(251, 113, 133, 0.15),
+    inset 0 0 20px rgba(251, 113, 133, 0.1);
+  animation: glowPulseRose 3s ease-in-out infinite;
+}
+
+.glow-amber {
+  box-shadow: 
+    0 0 20px rgba(251, 191, 36, 0.3),
+    0 0 40px rgba(251, 191, 36, 0.15),
+    inset 0 0 20px rgba(251, 191, 36, 0.1);
+  animation: glowPulseAmber 3s ease-in-out infinite;
+}
+
+.glow-orange {
+  box-shadow: 
+    0 0 20px rgba(251, 146, 60, 0.3),
+    0 0 40px rgba(251, 146, 60, 0.15),
+    inset 0 0 20px rgba(251, 146, 60, 0.1);
+  animation: glowPulseOrange 3s ease-in-out infinite;
+}
+
+.glow-emerald {
+  box-shadow: 
+    0 0 20px rgba(16, 185, 129, 0.3),
+    0 0 40px rgba(16, 185, 129, 0.15),
+    inset 0 0 20px rgba(16, 185, 129, 0.1);
+  animation: glowPulseEmerald 3s ease-in-out infinite;
+}
+
+@keyframes glowPulseBlue {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(59, 130, 246, 0.3),
+      0 0 40px rgba(59, 130, 246, 0.15),
+      inset 0 0 20px rgba(59, 130, 246, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(59, 130, 246, 0.5),
+      0 0 60px rgba(59, 130, 246, 0.25),
+      inset 0 0 30px rgba(59, 130, 246, 0.15);
+  }
+}
+
+@keyframes glowPulseRose {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(251, 113, 133, 0.3),
+      0 0 40px rgba(251, 113, 133, 0.15),
+      inset 0 0 20px rgba(251, 113, 133, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(251, 113, 133, 0.5),
+      0 0 60px rgba(251, 113, 133, 0.25),
+      inset 0 0 30px rgba(251, 113, 133, 0.15);
+  }
+}
+
+@keyframes glowPulseAmber {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(251, 191, 36, 0.3),
+      0 0 40px rgba(251, 191, 36, 0.15),
+      inset 0 0 20px rgba(251, 191, 36, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(251, 191, 36, 0.5),
+      0 0 60px rgba(251, 191, 36, 0.25),
+      inset 0 0 30px rgba(251, 191, 36, 0.15);
+  }
+}
+
+@keyframes glowPulseOrange {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(251, 146, 60, 0.3),
+      0 0 40px rgba(251, 146, 60, 0.15),
+      inset 0 0 20px rgba(251, 146, 60, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(251, 146, 60, 0.5),
+      0 0 60px rgba(251, 146, 60, 0.25),
+      inset 0 0 30px rgba(251, 146, 60, 0.15);
+  }
+}
+
+@keyframes glowPulseEmerald {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px rgba(16, 185, 129, 0.3),
+      0 0 40px rgba(16, 185, 129, 0.15),
+      inset 0 0 20px rgba(16, 185, 129, 0.1);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px rgba(16, 185, 129, 0.5),
+      0 0 60px rgba(16, 185, 129, 0.25),
+      inset 0 0 30px rgba(16, 185, 129, 0.15);
+  }
+}
+
+/* Glow customizado dinâmico para cores personalizadas */
+.custom-glow {
+  animation: customGlowPulse 3s ease-in-out infinite;
+  border-color: var(--custom-glow-color, #3b82f6);
+  border-opacity: 0.6;
+}
+
+@keyframes customGlowPulse {
+  0%, 100% {
+    box-shadow: 
+      0 0 20px color-mix(in srgb, var(--custom-glow-color, #3b82f6) 30%, transparent),
+      0 0 40px color-mix(in srgb, var(--custom-glow-color, #3b82f6) 15%, transparent),
+      inset 0 0 20px color-mix(in srgb, var(--custom-glow-color, #3b82f6) 10%, transparent);
+  }
+  50% {
+    box-shadow: 
+      0 0 30px color-mix(in srgb, var(--custom-glow-color, #3b82f6) 50%, transparent),
+      0 0 60px color-mix(in srgb, var(--custom-glow-color, #3b82f6) 25%, transparent),
+      inset 0 0 30px color-mix(in srgb, var(--custom-glow-color, #3b82f6) 15%, transparent);
+  }
+}
+
+/* Efeitos neon para elementos customizados */
+.neon-text {
+  animation: neonPulse 2s ease-in-out infinite;
+}
+
+.neon-button {
+  animation: neonButtonPulse 2s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+.neon-button:hover {
+  transform: scale(1.05);
+  filter: brightness(1.2);
+}
+
+.neon-badge {
+  animation: neonBadgePulse 2s ease-in-out infinite;
+}
+
+@keyframes neonPulse {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.3);
+  }
+}
+
+@keyframes neonButtonPulse {
+  0%, 100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
+@keyframes neonBadgePulse {
+  0%, 100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+  50% {
+    filter: brightness(1.2);
+    transform: scale(1.02);
+  }
+}
+
+/* Efeito de foco no card principal */
+.focused-card {
+  animation: focusedCardPulse 3s ease-in-out infinite;
+  position: relative;
+}
+
+.focused-card::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  padding: 2px;
+  background: linear-gradient(45deg, var(--custom-glow-color, #3b82f6), transparent, var(--custom-glow-color, #3b82f6));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: focusedCardBorder 3s ease-in-out infinite;
+  opacity: 0.6;
+  z-index: -1;
+}
+
+@keyframes focusedCardPulse {
+  0%, 100% {
+    transform: scale(1.05);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.08);
+    filter: brightness(1.15);
+  }
+}
+
+@keyframes focusedCardBorder {
+  0%, 100% {
+    opacity: 0.6;
+    transform: rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: rotate(180deg);
+  }
+}
+
+/* Scroll suave para vertical */
+.timeline-container {
+  scroll-behavior: smooth;
+}
+
+/* Indicadores de scroll para vertical */
+.timeline-scroll-indicator {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 100;
+}
+
+.timeline-scroll-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.timeline-scroll-dot.active {
+  background: rgba(255, 255, 255, 0.9);
+  transform: scale(1.5);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Animações para setas de arrastar horizontal */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 2s ease-in-out infinite;
+}
+
+@keyframes bounce-horizontal-left {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-8px);
+  }
+}
+
+@keyframes bounce-horizontal-right {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(8px);
+  }
+}
+
+.animate-bounce-horizontal {
+  animation: bounce-horizontal-right 1.5s ease-in-out infinite;
+}
+
+.animate-bounce-horizontal-left {
+  animation: bounce-horizontal-left 1.5s ease-in-out infinite;
+}
+
 

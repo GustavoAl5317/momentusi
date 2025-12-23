@@ -5,6 +5,19 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { useEffect, useRef, useState } from 'react'
 
+// Helper para converter hex para rgba
+const hexToRgba = (hex: string, alpha: number = 1): string => {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`
+}
+
+// Helper para criar glow dinâmico
+const createGlowShadow = (color: string): string => {
+  return `0 0 20px ${hexToRgba(color, 0.3)}, 0 0 40px ${hexToRgba(color, 0.15)}, inset 0 0 20px ${hexToRgba(color, 0.1)}`
+}
+
 interface TimelineVerticalProps {
   moments: Moment[]
   theme: any
@@ -105,22 +118,33 @@ export default function TimelineVertical({
                 : 'md:ml-0 md:mr-auto md:pr-8'
             }`}>
               <div 
-                className={`timeline-card animate-fadeInUp cursor-pointer group relative w-full ${theme.cardStyle || 'bg-slate-800/90 backdrop-blur-sm border-pink-500/30 shadow-xl'}`}
+                className={`timeline-card animate-fadeInUp cursor-pointer group relative w-full ${theme.customColors ? 'custom-glow' : (theme.cardStyle || 'bg-slate-800/90 backdrop-blur-sm border-2 border-pink-500 shadow-xl glow-rose')}`}
                 style={{ 
                   animationDelay: `${index * 0.15}s`,
-                  borderColor: theme.cardStyle ? undefined : 'rgba(236, 72, 153, 0.2)',
                   backgroundColor: theme.customColors?.card || undefined,
-                } as React.CSSProperties}
+                  borderColor: theme.customColors?.border ? `${theme.customColors.border}99` : (theme.customColors?.primary ? `${theme.customColors.primary}99` : undefined),
+                  '--custom-glow-color': theme.customColors?.border || theme.customColors?.primary || '#3b82f6',
+                  boxShadow: theme.customColors?.border || theme.customColors?.primary 
+                    ? createGlowShadow(theme.customColors.border || theme.customColors.primary || '#3b82f6')
+                    : undefined,
+                } as React.CSSProperties & { '--custom-glow-color'?: string }}
                 onClick={() => onMomentClick(moment)}
               >
                 {/* Indicador de clique */}
-                <div className="absolute top-2 right-2 sm:top-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-700/90 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold text-pink-300 shadow-lg z-30">
+                <div className={`absolute top-2 right-2 sm:top-4 sm:right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-slate-700/90 backdrop-blur-sm px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs font-semibold ${theme?.accent || 'text-pink-300'} shadow-lg z-30`}>
                   <span className="hidden sm:inline">Clique para ver mais</span>
                   <span className="sm:hidden">Ver mais</span>
                 </div>
                 
                 {/* Data destacada */}
-                <div className={`timeline-date ${theme.dateBadge || 'bg-purple-600 text-white border-2 border-purple-400'} relative z-10 text-xs sm:text-sm md:text-base`}>
+                <div 
+                  className={`timeline-date ${theme.customColors?.badge ? 'neon-badge' : (theme.dateBadge || 'bg-purple-600 text-white border-2 border-purple-400')} relative z-10 text-xs sm:text-sm md:text-base`}
+                  style={theme.customColors?.badge ? {
+                    backgroundColor: `${theme.customColors.badge}E6`,
+                    borderColor: `${theme.customColors.badge}CC`,
+                    boxShadow: `0 0 15px ${theme.customColors.badge}80, 0 0 30px ${theme.customColors.badge}40, inset 0 0 10px ${theme.customColors.badge}20`,
+                  } : {}}
+                >
                   <span className="relative z-10">
                     {format(new Date(moment.date), "dd 'de' MMMM 'de' yyyy", {
                       locale: ptBR,
@@ -129,12 +153,23 @@ export default function TimelineVertical({
                 </div>
 
                 {/* Título */}
-                <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-3 sm:mb-4 leading-tight group-hover:scale-105 transition-transform duration-300 relative z-10 break-words overflow-wrap-anywhere px-0">
+                <h2 
+                  className={`text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4 leading-tight group-hover:scale-105 transition-transform duration-300 relative z-10 break-words overflow-wrap-anywhere px-0 ${theme.customColors?.title ? 'neon-text' : 'text-white'}`}
+                  style={theme.customColors?.title ? {
+                    color: theme.customColors.title,
+                    textShadow: `0 0 20px ${theme.customColors.title}80, 0 0 40px ${theme.customColors.title}40, 0 0 60px ${theme.customColors.title}20`,
+                  } : {}}
+                >
                   {moment.title}
                 </h2>
 
                 {/* Descrição */}
-                <p className="text-gray-300 leading-relaxed text-sm sm:text-base md:text-lg mb-4 sm:mb-6 group-hover:text-gray-100 transition-colors duration-300 relative z-10 break-words whitespace-pre-wrap overflow-wrap-anywhere px-0">
+                <p 
+                  className={`leading-relaxed text-sm sm:text-base md:text-lg mb-4 sm:mb-6 group-hover:opacity-90 transition-colors duration-300 relative z-10 break-words whitespace-pre-wrap overflow-wrap-anywhere px-0 ${theme.customColors?.text ? '' : 'text-gray-300 group-hover:text-gray-100'}`}
+                  style={theme.customColors?.text ? {
+                    color: theme.customColors.text,
+                  } : {}}
+                >
                   {moment.description}
                 </p>
 
