@@ -220,7 +220,8 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
 
   // Aplicar variáveis CSS dinâmicas para o tema
   // Se tiver cores customizadas, usar elas; senão, usar cores do tema
-  const themeVars: React.CSSProperties = {
+  // Usar Record<string, string> para permitir CSS variables
+  const themeVars: Record<string, string> = {
     '--line-color-1': customColors?.primary 
       ? `${customColors.primary}CC` // Adiciona transparência
       : (timeline.theme === 'romantic' ? 'rgba(236, 72, 153, 0.8)' :
@@ -258,7 +259,7 @@ export default function TimelineView({ timeline }: TimelineViewProps) {
   return (
     <div 
       className={`min-h-screen ${customColors ? '' : theme.bg}`} 
-      style={{ ...themeVars, ...customStyle }}
+      style={{ ...themeVars, ...customStyle } as React.CSSProperties}
     >
       {/* Header */}
       <div className="container mx-auto px-4 py-16 md:py-20 text-center relative">
